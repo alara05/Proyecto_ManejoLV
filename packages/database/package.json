@@ -1,0 +1,15 @@
+{
+  "name": "@proyecto-saas/database",
+  "version": "1.0.0",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "db:generate": "prisma generate --schema=prisma/auth-schema.prisma && prisma generate --schema=prisma/bus-schema.prisma && prisma generate --schema=prisma/ticket-schema.prisma"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.0.0"
+  }
+}

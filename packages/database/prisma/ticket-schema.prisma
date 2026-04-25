@@ -1,0 +1,235 @@
+// ============================================
+// TICKET SERVICE - schema.prisma
+// ============================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("TICKET_DATABASE_URL")
+}
+
+model Compra {
+  id          Int           @id @default(autoincrement())
+  usuarioId   Int           @map("usuario_id")       // Auth Service
+  frecuenciaId Int          @map("frecuencia_id")    // Bus Service
+  fechaViaje  DateTime      @map("fecha_viaje") @db.Date
+  cantidad    Int           @default(1)
+  total       Decimal       @db.Decimal(10, 2)
+  canal       CanalVenta
+  estado      EstadoCompra  @default(PENDIENTE)
+  creadoEn    DateTime      @default(now()) @map("creado_en")
+
+  boletos Boleto[]
+  pago    PagoPasajero?
+
+  @@map("compras")
+}
+
+model Boleto {
+  id              Int          @id @default(autoincrement())
+  compraId        Int          @map("compra_id")
+  uuidQr          String       @unique @default(uuid()) @map("uuid_qr")
+  cedulaPasajero  String       @map("cedula_pasajero")
+  nombrePasajero  String       @map("nombre_pasajero")
+  tipoTarifa      TipoTarifa   @default(NORMAL) @map("tipo_tarifa")
+  estado          EstadoBoleto @default(PENDIENTE)
+  expiraEn        DateTime     @map("expira_en")
+  creadoEn        DateTime     @default(now()) @map("creado_en")
+
+  compra        Compra        @relation(fields: [compraId], references: [id])
+  escaneo       Escaneo?
+  boletoParada  BoletoParada?
+
+  @@map("boletos")
+}
+
+model PagoPasajero {
+  id       Int          @id @default(autoincrement())
+  compraId Int          @unique @map("compra_id")
+  monto    Decimal      @db.Decimal(10, 2)
+  metodo   MetodoPago
+  estado   EstadoPago   @default(PENDIENTE)
+  pagadoEn DateTime?    @map("pagado_en")
+
+  compra          Compra            @relation(fields: [compraId], references: [id])
+  pagoTarjeta     PagoTarjeta?
+  pagoTransferencia PagoTransferencia?
+  pagoEfectivo    PagoEfectivo?
+
+  @@map("pagos_pasajero")
+}
+
+model PagoTarjeta {
+  id                 Int    @id @default(autoincrement())
+  pagoId             Int    @unique @map("pago_id")
+  ultimos4           String @map("ultimos_4")
+  marca              String
+  referenciaPasarela String @map("referencia_pasarela")
+
+  pago PagoPasajero @relation(fields: [pagoId], references: [id])
+
+  @@map("pagos_tarjeta")
+}
+
+model PagoTransferencia {
+  id             Int                  @id @default(autoincrement())
+  pagoId         Int                  @unique @map("pago_id")
+  banco          String
+  referencia     String
+  comprobanteUrl String?              @map("comprobante_url")
+  estado         EstadoTransferencia  @default(PENDIENTE)
+
+  pago       PagoPasajero @relation(fields: [pagoId], references: [id])
+  aprobacion Aprobacion?
+
+  @@map("pagos_transferencia")
+}
+
+model Aprobacion {
+  id                  Int              @id @default(autoincrement())
+  pagoTransferenciaId Int              @unique @map("pago_transferencia_id")
+  oficinistaId        Int              @map("oficinista_id")   // Auth Service
+  estado              EstadoAprobacion
+  observacion         String?
+  revisadoEn          DateTime         @default(now()) @map("revisado_en")
+
+  pagoTransferencia PagoTransferencia @relation(fields: [pagoTransferenciaId], references: [id])
+
+  @@map("aprobaciones")
+}
+
+model PagoEfectivo {
+  id            Int        @id @default(autoincrement())
+  pagoId        Int        @unique @map("pago_id")
+  vendedorId    Int        @map("vendedor_id")   // Auth Service (OFICIAL u OFICINISTA)
+  montoRecibido Decimal    @map("monto_recibido") @db.Decimal(10, 2)
+  cambio        Decimal    @db.Decimal(10, 2)
+  canalVenta    CanalEfectivo @map("canal_venta")
+  turnoId       Int?       @map("turno_id")      // Bus Service, solo si es BUS
+
+  pago PagoPasajero @relation(fields: [pagoId], references: [id])
+
+  @@map("pagos_efectivo")
+}
+
+model Escaneo {
+  id          Int              @id @default(autoincrement())
+  boletoId    Int              @unique @map("boleto_id")
+  oficialId   Int              @map("oficial_id")   // Auth Service
+  busId       Int              @map("bus_id")        // Bus Service
+  turnoId     Int              @map("turno_id")      // Bus Service
+  resultado   ResultadoEscaneo
+  escaneadoEn DateTime         @default(now()) @map("escaneado_en")
+
+  boleto Boleto @relation(fields: [boletoId], references: [id])
+
+  @@map("escaneos")
+}
+
+model BoletoParada {
+  id               Int               @id @default(autoincrement())
+  boletoId         Int               @unique @map("boleto_id")
+  paradaOrigenId   Int               @map("parada_origen_id")   // Bus Service
+  paradaDestinoId  Int               @map("parada_destino_id")  // Bus Service
+  estado           EstadoBoletoParada @default(PENDIENTE)
+
+  boleto     Boleto       @relation(fields: [boletoId], references: [id])
+  alertasGps AlertaGps[]
+
+  @@map("boleto_paradas")
+}
+
+model AlertaGps {
+  id              Int          @id @default(autoincrement())
+  boletoParadaId  Int          @map("boleto_parada_id")
+  turnoId         Int          @map("turno_id")   // Bus Service
+  latActual       Decimal      @map("lat_actual") @db.Decimal(10, 8)
+  lngActual       Decimal      @map("lng_actual") @db.Decimal(11, 8)
+  metrosRestantes Int          @map("metros_restantes")
+  estado          EstadoAlerta @default(ACTIVA)
+  actualizadoEn   DateTime     @default(now()) @updatedAt @map("actualizado_en")
+
+  boletoParada BoletoParada @relation(fields: [boletoParadaId], references: [id])
+
+  @@map("alertas_gps")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum CanalVenta {
+  APP
+  WEB
+  OFICIAL
+  OFICINISTA
+}
+
+enum TipoTarifa {
+  NORMAL
+  TERCERA_EDAD
+  DISCAPACIDAD
+  MENOR
+}
+
+enum EstadoCompra {
+  PENDIENTE
+  CONFIRMADA
+  ANULADA
+}
+
+enum EstadoBoleto {
+  PENDIENTE
+  VIGENTE
+  UTILIZADO
+  EXPIRADO
+  ANULADO
+}
+
+enum MetodoPago {
+  TARJETA
+  TRANSFERENCIA
+  EFECTIVO
+}
+
+enum EstadoPago {
+  PENDIENTE
+  APROBADO
+  RECHAZADO
+}
+
+enum EstadoTransferencia {
+  PENDIENTE
+  APROBADO
+  RECHAZADO
+}
+
+enum EstadoAprobacion {
+  APROBADO
+  RECHAZADO
+}
+
+enum CanalEfectivo {
+  BUS
+  OFICINA
+}
+
+enum ResultadoEscaneo {
+  APROBADO
+  RECHAZADO
+}
+
+enum EstadoBoletoParada {
+  PENDIENTE
+  ALERTADO
+  BAJADO
+}
+
+enum EstadoAlerta {
+  ACTIVA
+  DISPARADA
+  INACTIVA
+}

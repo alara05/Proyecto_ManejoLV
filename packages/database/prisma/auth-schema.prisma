@@ -1,0 +1,132 @@
+// ============================================
+// AUTH SERVICE - schema.prisma
+// ============================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("AUTH_DATABASE_URL")
+}
+
+model Usuario {
+  id           Int           @id @default(autoincrement())
+  nombre       String
+  email        String        @unique
+  passwordHash String        @map("password_hash")
+  estado       EstadoUsuario @default(ACTIVO)
+  creadoEn     DateTime      @default(now()) @map("creado_en")
+
+  roles    UsuarioRol[]
+  sesiones Sesion[]
+
+  @@map("usuarios")
+}
+
+model Rol {
+  id          Int    @id @default(autoincrement())
+  nombre      NombreRol @unique
+  descripcion String?
+
+  usuarios  UsuarioRol[]
+  permisos  RolPermiso[]
+
+  @@map("roles")
+}
+
+model UsuarioRol {
+  id          Int       @id @default(autoincrement())
+  usuarioId   Int       @map("usuario_id")
+  rolId       Int       @map("rol_id")
+  asignadoPor Int?      @map("asignado_por")
+  asignadoEn  DateTime  @default(now()) @map("asignado_en")
+  expiraEn    DateTime? @map("expira_en")
+  estado      EstadoRolUsuario @default(ACTIVO)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+  rol     Rol     @relation(fields: [rolId], references: [id])
+
+  @@unique([usuarioId, rolId])
+  @@map("usuario_roles")
+}
+
+model Permiso {
+  id          Int    @id @default(autoincrement())
+  nombre      NombrePermiso @unique
+  descripcion String?
+
+  roles RolPermiso[]
+
+  @@map("permisos")
+}
+
+model RolPermiso {
+  id        Int @id @default(autoincrement())
+  rolId     Int @map("rol_id")
+  permisoId Int @map("permiso_id")
+
+  rol     Rol     @relation(fields: [rolId], references: [id])
+  permiso Permiso @relation(fields: [permisoId], references: [id])
+
+  @@unique([rolId, permisoId])
+  @@map("rol_permisos")
+}
+
+model Sesion {
+  id          Int      @id @default(autoincrement())
+  usuarioId   Int      @map("usuario_id")
+  token       String   @unique
+  expiraEn    DateTime @map("expira_en")
+  dispositivo String?
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+
+  @@map("sesiones")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum EstadoUsuario {
+  ACTIVO
+  INACTIVO
+}
+
+enum EstadoRolUsuario {
+  ACTIVO
+  INACTIVO
+}
+
+enum NombreRol {
+  ADMIN
+  OFICIAL
+  OFICINISTA
+  DUENO
+  PASAJERO
+  SOPORTE
+}
+
+enum NombrePermiso {
+  ESCANEAR_QR
+  VER_TURNO
+  VER_ASIENTOS
+  VENDER_BOLETO
+  VER_REPORTES
+  GESTIONAR_BUSES
+  PAGAR_DUENOS
+  GESTIONAR_USUARIOS
+  COMPRAR_BOLETO
+  VER_MIS_BOLETOS
+  VER_MIS_PAGOS
+  VER_TOTAL_VIAJES
+  ALERTA_GPS
+  VER_RECLAMOS
+  GESTIONAR_RECLAMOS
+  APROBAR_TRANSFERENCIA
+  VENDER_BOLETO_OFICINA
+  VER_PAGOS_PENDIENTES
+  ANULAR_BOLETO
+}

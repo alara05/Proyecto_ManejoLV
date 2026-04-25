@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  postgres-db:
+    image: postgres:15
+    container_name: sas_buses_db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: rootpassword
+    ports:
+      - "5433:5432"
+    volumes:
+      # Guarda los datos para que no se borren si apagas Docker
+      - pgdata:/var/lib/postgresql/data
+      # Ejecuta el script inicial la primera vez que se crea el contenedor
+      - ./packages/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  pgdata:

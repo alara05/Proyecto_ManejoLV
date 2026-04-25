@@ -1,0 +1,209 @@
+// ============================================
+// BUS SERVICE - schema.prisma
+// ============================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("BUS_DATABASE_URL")
+}
+
+model Dueno {
+  id             Int         @id @default(autoincrement())
+  nombre         String
+  cedula         String      @unique
+  telefono       String?
+  cuentaBancaria String?     @map("cuenta_bancaria")
+  banco          String?
+  estado         EstadoGeneral @default(ACTIVO)
+
+  buses Bus[]
+
+  @@map("duenos")
+}
+
+model Cooperativa {
+  id     Int           @id @default(autoincrement())
+  nombre String
+  ruc    String        @unique
+  estado EstadoGeneral @default(ACTIVO)
+
+  buses  Bus[]
+
+  @@map("cooperativas")
+}
+
+model Bus {
+  id           Int          @id @default(autoincrement())
+  cooperativaId Int         @map("cooperativa_id")
+  duenoId      Int          @map("dueno_id")
+  placa        String       @unique
+  marca        String
+  carroceria   String
+  modelo       String
+  anio         Int
+  capacidad    Int
+  color        String?
+  estado       EstadoBus    @default(ACTIVO)
+
+  cooperativa  Cooperativa    @relation(fields: [cooperativaId], references: [id])
+  dueno        Dueno          @relation(fields: [duenoId], references: [id])
+  asientos     Asiento[]
+  frecuencias  Frecuencia[]
+  turnos       Turno[]
+
+  @@map("buses")
+}
+
+model Chofer {
+  id           Int           @id @default(autoincrement())
+  nombre       String
+  cedula       String        @unique
+  telefono     String?
+  licencia     String        @unique
+  tipoLicencia String        @map("tipo_licencia")
+  estado       EstadoGeneral @default(ACTIVO)
+
+  turnos Turno[]
+
+  @@map("choferes")
+}
+
+model Ruta {
+  id           Int     @id @default(autoincrement())
+  nombre       String
+  origen       String
+  destino      String
+  duracionMin  Int     @map("duracion_min")
+  precioPasaje Decimal @map("precio_pasaje") @db.Decimal(10, 2)
+
+  paradas    Parada[]
+  frecuencias Frecuencia[]
+  turnos     Turno[]
+
+  @@map("rutas")
+}
+
+model Parada {
+  id           Int     @id @default(autoincrement())
+  rutaId       Int     @map("ruta_id")
+  nombre       String
+  orden        Int
+  latitud      Decimal @db.Decimal(10, 8)
+  longitud     Decimal @db.Decimal(11, 8)
+  metrosAlerta Int     @default(500) @map("metros_alerta")
+
+  ruta Ruta @relation(fields: [rutaId], references: [id])
+
+  @@map("paradas")
+}
+
+model Frecuencia {
+  id          Int    @id @default(autoincrement())
+  rutaId      Int    @map("ruta_id")
+  busId       Int    @map("bus_id")
+  diaSemana   DiaSemana @map("dia_semana")
+  horaSalida  String @map("hora_salida")
+  horaLlegada String @map("hora_llegada")
+
+  ruta Ruta @relation(fields: [rutaId], references: [id])
+  bus  Bus  @relation(fields: [busId], references: [id])
+
+  @@map("frecuencias")
+}
+
+model Turno {
+  id         Int         @id @default(autoincrement())
+  busId      Int         @map("bus_id")
+  rutaId     Int         @map("ruta_id")
+  choferId   Int         @map("chofer_id")
+  fecha      DateTime    @db.Date
+  horaInicio String      @map("hora_inicio")
+  horaFin    String?     @map("hora_fin")
+  estado     EstadoTurno @default(PENDIENTE)
+
+  bus    Bus    @relation(fields: [busId], references: [id])
+  ruta   Ruta   @relation(fields: [rutaId], references: [id])
+  chofer Chofer @relation(fields: [choferId], references: [id])
+
+  asientosTurno AsientoTurno[]
+
+  @@map("turnos")
+}
+
+model Asiento {
+  id     Int          @id @default(autoincrement())
+  busId  Int          @map("bus_id")
+  numero Int
+  fila   String?
+  tipo   TipoAsiento  @default(NORMAL)
+  estado EstadoGeneral @default(ACTIVO)
+
+  bus    Bus            @relation(fields: [busId], references: [id])
+  turnos AsientoTurno[]
+
+  @@unique([busId, numero])
+  @@map("asientos")
+}
+
+model AsientoTurno {
+  id        Int               @id @default(autoincrement())
+  turnoId   Int               @map("turno_id")
+  asientoId Int               @map("asiento_id")
+  boletoId  Int?              @map("boleto_id")
+  estado    EstadoAsientoTurno @default(DISPONIBLE)
+
+  turno   Turno   @relation(fields: [turnoId], references: [id])
+  asiento Asiento @relation(fields: [asientoId], references: [id])
+
+  @@unique([turnoId, asientoId])
+  @@map("asiento_turnos")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum EstadoGeneral {
+  ACTIVO
+  INACTIVO
+}
+
+enum EstadoBus {
+  ACTIVO
+  MANTENIMIENTO
+  INACTIVO
+}
+
+enum EstadoTurno {
+  PENDIENTE
+  EN_RUTA
+  COMPLETADO
+  CANCELADO
+}
+
+enum TipoAsiento {
+  NORMAL
+  VIP
+  DISCAPACIDAD
+}
+
+enum EstadoAsientoTurno {
+  DISPONIBLE
+  RESERVADO
+  OCUPADO
+  VACIO
+}
+
+enum DiaSemana {
+  LUN
+  MAR
+  MIE
+  JUE
+  VIE
+  SAB
+  DOM
+}
