@@ -27,9 +27,11 @@ model Dueno {
 
 model Cooperativa {
   id     Int           @id @default(autoincrement())
-  nombre String
-  ruc    String        @unique
-  estado EstadoGeneral @default(ACTIVO)
+  nombre         String
+  ruc            String        @unique
+  logo           String?
+  cuentaBancaria String?       @map("cuenta_bancaria")
+  estado         EstadoGeneral @default(ACTIVO)
 
   buses  Bus[]
 
@@ -47,6 +49,7 @@ model Bus {
   anio         Int
   capacidad    Int
   color        String?
+  foto         String?
   estado       EstadoBus    @default(ACTIVO)
 
   cooperativa  Cooperativa    @relation(fields: [cooperativaId], references: [id])
@@ -108,6 +111,7 @@ model Frecuencia {
   diaSemana   DiaSemana @map("dia_semana")
   horaSalida  String @map("hora_salida")
   horaLlegada String @map("hora_llegada")
+  resolucion  String?
 
   ruta Ruta @relation(fields: [rutaId], references: [id])
   bus  Bus  @relation(fields: [busId], references: [id])
