@@ -53,8 +53,8 @@ export default function Home() {
 
       queryParams.append('incluirParadas', formData.incluirParadas.toString());
 
-      // Intentar con diferentes puertos/rutas
-      const apiUrl = `http://localhost:3001/api/rutas/search?${queryParams}`;
+      // API endpoint sin prefijo /api
+      const apiUrl = `http://localhost:3002/rutas/search?${queryParams}`;
 
       const response = await fetch(apiUrl);
 
