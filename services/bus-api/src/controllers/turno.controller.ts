@@ -23,73 +23,100 @@ export const generarTurnosDia = async (req: Request, res: Response) => {
   try {
     const fechaObj = new Date(fecha);
     const diaSemana = diasMapeo[fechaObj.getUTCDay()];
+    const diaDelAnio = Math.floor((fechaObj.getTime() - new Date(fechaObj.getUTCFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
 
-    // 1. Buscar frecuencias para ese día
-    const frecuencias = await prisma.frecuencia.findMany({
-      where: { diaSemana },
-      include: { ruta: true, bus: true },
+    // 1. Obtener todas las cooperativas para procesar por separado
+    const cooperativas = await prisma.cooperativa.findMany({
+      where: { estado: 'ACTIVO' }
     });
 
-    if (frecuencias.length === 0) {
-      return res.status(404).json({ message: `No hay frecuencias configuradas para el día ${diaSemana}` });
-    }
+    const turnosCreadosGlobal = [];
 
-    const turnosCreados = [];
-
-    // 2. Generar un Turno por cada frecuencia
-    for (const freq of frecuencias) {
-      // Verificar si ya existe el turno para evitar duplicados
-      const existe = await prisma.turno.findFirst({
-        where: {
-          fecha: fechaObj,
-          horaInicio: freq.horaSalida,
-          rutaId: freq.rutaId,
+    for (const coop of cooperativas) {
+      // 2. Buscar frecuencias de esta cooperativa para el día
+      const frecuencias = await prisma.frecuencia.findMany({
+        where: { 
+          diaSemana,
+          bus: { cooperativaId: coop.id } // Solo frecuencias de esta coop
         },
+        orderBy: { horaSalida: 'asc' },
+        include: { ruta: true }
       });
 
-      if (!existe) {
-        // Suponemos un chofer por defecto por ahora (o el primero activo)
-        const chofer = await prisma.chofer.findFirst({ where: { estado: 'ACTIVO' } });
+      if (frecuencias.length === 0) continue;
 
-        if (!chofer) {
-          return res.status(500).json({ error: 'No hay choferes activos para asignar' });
-        }
+      // 3. Obtener buses activos de la cooperativa para rotación
+      const busesDisponibles = await prisma.bus.findMany({
+        where: { 
+          cooperativaId: coop.id,
+          estado: 'ACTIVO'
+        },
+        orderBy: { id: 'asc' }
+      });
 
-        const nuevoTurno = await prisma.turno.create({
-          data: {
+      if (busesDisponibles.length === 0) continue;
+
+      // 4. Lógica de Rotación (Round-Robin basado en el día del año)
+      // Esto asegura que si hay más buses que frecuencias, los buses roten cada día.
+      const totalBuses = busesDisponibles.length;
+      const startIndex = diaDelAnio % totalBuses;
+
+      for (let i = 0; i < frecuencias.length; i++) {
+        const freq = frecuencias[i];
+        
+        // Seleccionamos el bus usando el índice rotado
+        // Si hay menos buses que frecuencias (error de config), se repiten.
+        // Si hay más buses que frecuencias, los que sobran tienen "Día de Parada".
+        const busAsignado = busesDisponibles[(startIndex + i) % totalBuses];
+
+        // Verificar duplicados: Si ya hay UN turno para esta frecuencia y fecha, no creamos otro.
+        // Quitamos busId de aquí para que no cree duplicados con buses distintos.
+        const existe = await prisma.turno.findFirst({
+          where: {
             fecha: fechaObj,
             horaInicio: freq.horaSalida,
-            horaFin: freq.horaLlegada,
-            busId: freq.busId,
             rutaId: freq.rutaId,
-            choferId: chofer.id,
-            estado: 'PENDIENTE',
           },
         });
 
-        // 3. Inicializar Asientos para este Turno (US08)
-        const asientosBus = await prisma.asiento.findMany({
-          where: { busId: freq.busId },
-        });
+        if (!existe) {
+          const chofer = await prisma.chofer.findFirst({ where: { estado: 'ACTIVO' } });
+          if (!chofer) continue;
 
-        const asientosTurnoData = asientosBus.map((asiento) => ({
-          turnoId: nuevoTurno.id,
-          asientoId: asiento.id,
-          estado: 'DISPONIBLE' as any,
-        }));
+          const nuevoTurno = await prisma.turno.create({
+            data: {
+              fecha: fechaObj,
+              horaInicio: freq.horaSalida,
+              horaFin: freq.horaLlegada,
+              busId: busAsignado.id,
+              rutaId: freq.rutaId,
+              choferId: chofer.id,
+              estado: 'PENDIENTE',
+            },
+          });
 
-        await prisma.asientoTurno.createMany({
-          data: asientosTurnoData,
-        });
+          // 5. Inicializar Asientos para este Turno (US08)
+          const asientosBus = await prisma.asiento.findMany({
+            where: { busId: busAsignado.id },
+          });
 
-        turnosCreados.push(nuevoTurno);
+          await (prisma as any).asientoTurno.createMany({
+            data: asientosBus.map((asiento: any) => ({
+              turnoId: nuevoTurno.id,
+              asientoId: asiento.id,
+              estado: 'DISPONIBLE',
+            })),
+          });
+
+          turnosCreadosGlobal.push(nuevoTurno);
+        }
       }
     }
 
     res.status(201).json({
-      message: `Proceso completado para el día ${diaSemana}`,
-      generados: turnosCreados.length,
-      turnos: turnosCreados,
+      message: `Proceso de rotación completado para el día ${diaSemana}`,
+      generados: turnosCreadosGlobal.length,
+      cooperativasProcesadas: cooperativas.length
     });
   } catch (error) {
     console.error(error);
