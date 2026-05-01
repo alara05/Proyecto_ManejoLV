@@ -99,7 +99,7 @@ export default function SearchForm({ onSearch, isLoading = false }: SearchFormPr
               name="origen"
               value={formData.origen}
               onChange={handleChange}
-              placeholder="Ej: Bogotá"
+              placeholder="Ej: Quito"
               className={`${styles.input} ${errors.origen ? styles.inputError : ''}`}
               disabled={isLoading}
             />
@@ -119,7 +119,7 @@ export default function SearchForm({ onSearch, isLoading = false }: SearchFormPr
               name="destino"
               value={formData.destino}
               onChange={handleChange}
-              placeholder="Ej: Medellín"
+              placeholder="Ej: Guayaquil"
               className={`${styles.input} ${errors.destino ? styles.inputError : ''}`}
               disabled={isLoading}
             />
@@ -133,7 +133,7 @@ export default function SearchForm({ onSearch, isLoading = false }: SearchFormPr
           {/* Campo Precio Máximo */}
           <div className={styles.formGroup}>
             <label htmlFor="maxPrecio" className={styles.label}>
-              Precio Máximo (COP)
+              Precio Máximo ($USD)
             </label>
             <input
               type="number"

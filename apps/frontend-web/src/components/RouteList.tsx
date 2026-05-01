@@ -32,7 +32,7 @@ export default function RouteList({
   const isIntermediateStop = (ruta: Route): boolean => {
     if (!searchParams) return false;
     const { origen: searchOrigen, destino: searchDestino } = searchParams;
-    return (
+    return !!(
       (ruta.origen !== searchOrigen || ruta.destino !== searchDestino) &&
       ruta.paradas &&
       ruta.paradas.includes(searchOrigen) &&
