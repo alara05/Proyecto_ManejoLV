@@ -36,12 +36,13 @@ export const updateRuta = async (req: Request, res: Response) => {
   }
 };
 export const searchRutas = async (req: Request, res: Response) => {
-  const { origen, destino, maxPrecio, maxDuracion } = req.query;
+  const { origen, destino, maxPrecio, maxDuracion, fecha, horaInicio, horaFin, incluirParadas } = req.query;
 
   try {
     // Validar parámetros numéricos para evitar errores de Prisma
     const priceFilter = maxPrecio ? parseFloat(String(maxPrecio)) : undefined;
     const durationFilter = maxDuracion ? parseInt(String(maxDuracion)) : undefined;
+    const incluirParadasIntermedias = incluirParadas !== 'false'; // Default true
 
     const rutas = await prisma.ruta.findMany({
       where: {
@@ -72,11 +73,26 @@ export const searchRutas = async (req: Request, res: Response) => {
             orden: 'asc',
           },
         },
+        turnos: fecha
+          ? {
+              where: {
+                fecha: new Date(String(fecha)),
+                ...(horaInicio && { horaInicio: { gte: String(horaInicio) } }),
+                ...(horaFin && { horaInicio: { lte: String(horaFin) } }),
+              },
+              include: {
+                bus: true,
+              },
+            }
+          : {
+              include: {
+                bus: true,
+              },
+            },
       },
     });
 
     // Filtrar para asegurar que el origen esté antes que el destino en la ruta
-    // Usamos : any para evitar errores de tipado si el cliente de Prisma no está inicializado
     const rutasFiltradas = rutas.filter((ruta: any) => {
       if (!origen || !destino) return true;
 
@@ -97,6 +113,11 @@ export const searchRutas = async (req: Request, res: Response) => {
           indexDestino = p.orden;
         }
       });
+
+      // Si no incluye paradas intermedias, solo rutas directas
+      if (!incluirParadasIntermedias && (indexOrigen > 0 || indexDestino < 999)) {
+        return false;
+      }
 
       // Validamos que ambos existan y que el origen esté antes que el destino
       return indexOrigen !== -1 && indexDestino !== -1 && indexOrigen < indexDestino;

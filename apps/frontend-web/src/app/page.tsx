@@ -39,6 +39,20 @@ export default function Home() {
         queryParams.append('maxDuracion', formData.maxDuracion.toString());
       }
 
+      if (formData.fecha) {
+        queryParams.append('fecha', formData.fecha);
+      }
+
+      if (formData.horaInicio) {
+        queryParams.append('horaInicio', formData.horaInicio);
+      }
+
+      if (formData.horaFin) {
+        queryParams.append('horaFin', formData.horaFin);
+      }
+
+      queryParams.append('incluirParadas', formData.incluirParadas.toString());
+
       // Intentar con diferentes puertos/rutas
       const apiUrl = `http://localhost:3001/api/rutas/search?${queryParams}`;
 

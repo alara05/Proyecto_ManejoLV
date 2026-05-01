@@ -13,6 +13,10 @@ export interface SearchFormData {
   destino: string;
   maxPrecio: number | string;
   maxDuracion: number | string;
+  fecha: string;
+  horaInicio: string;
+  horaFin: string;
+  incluirParadas: boolean;
 }
 
 export default function SearchForm({ onSearch, isLoading = false }: SearchFormProps) {
@@ -21,6 +25,10 @@ export default function SearchForm({ onSearch, isLoading = false }: SearchFormPr
     destino: '',
     maxPrecio: '',
     maxDuracion: '',
+    fecha: '',
+    horaInicio: '',
+    horaFin: '',
+    incluirParadas: true,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -53,10 +61,10 @@ export default function SearchForm({ onSearch, isLoading = false }: SearchFormPr
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
     // Limpiar error del campo cuando el usuario empieza a escribir
     if (errors[name]) {
@@ -82,7 +90,7 @@ export default function SearchForm({ onSearch, isLoading = false }: SearchFormPr
       <div className={styles.formHeader}>
         <h2 className={styles.title}>Busca tu Ruta</h2>
         <p className={styles.subtitle}>
-          Encuentra la ruta perfecta con nuestros filtros avanzados
+          Encuentra la ruta perfecta 
         </p>
       </div>
 
@@ -91,7 +99,7 @@ export default function SearchForm({ onSearch, isLoading = false }: SearchFormPr
           {/* Campo Origen */}
           <div className={styles.formGroup}>
             <label htmlFor="origen" className={styles.label}>
-              Origen *
+              Origen 
             </label>
             <input
               type="text"
@@ -111,7 +119,7 @@ export default function SearchForm({ onSearch, isLoading = false }: SearchFormPr
           {/* Campo Destino */}
           <div className={styles.formGroup}>
             <label htmlFor="destino" className={styles.label}>
-              Destino *
+              Destino 
             </label>
             <input
               type="text"
@@ -141,7 +149,7 @@ export default function SearchForm({ onSearch, isLoading = false }: SearchFormPr
               name="maxPrecio"
               value={formData.maxPrecio}
               onChange={handleChange}
-              placeholder="Ej: 50000"
+              placeholder="Ej: 30"
               className={`${styles.input} ${errors.maxPrecio ? styles.inputError : ''}`}
               disabled={isLoading}
               min="0"
@@ -171,6 +179,70 @@ export default function SearchForm({ onSearch, isLoading = false }: SearchFormPr
               <span className={styles.errorMessage}>{errors.maxDuracion}</span>
             )}
           </div>
+        </div>
+
+        <div className={styles.gridTwoColumns}>
+          {/* Campo Fecha */}
+          <div className={styles.formGroup}>
+            <label htmlFor="fecha" className={styles.label}>
+               Fecha de Salida
+            </label>
+            <input
+              type="date"
+              id="fecha"
+              name="fecha"
+              value={formData.fecha}
+              onChange={handleChange}
+              className={`${styles.input}`}
+              disabled={isLoading}
+            />
+          </div>
+
+          {/* Campo Rango Horario */}
+          <div className={styles.formGroup}>
+            <label className={styles.label}> Rango Horario</label>
+            <div className={styles.timeRange}>
+              <input
+                type="time"
+                id="horaInicio"
+                name="horaInicio"
+                value={formData.horaInicio}
+                onChange={handleChange}
+                className={styles.input}
+                disabled={isLoading}
+                placeholder="Desde"
+              />
+              <span className={styles.separator}>→</span>
+              <input
+                type="time"
+                id="horaFin"
+                name="horaFin"
+                value={formData.horaFin}
+                onChange={handleChange}
+                className={styles.input}
+                disabled={isLoading}
+                placeholder="Hasta"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Checkbox Paradas Intermedias */}
+        <div className={styles.checkboxGroup}>
+          <label className={styles.checkboxLabel}>
+            <input
+              type="checkbox"
+              name="incluirParadas"
+              checked={formData.incluirParadas}
+              onChange={handleChange}
+              disabled={isLoading}
+              className={styles.checkbox}
+            />
+            <span> Rutas con paradas intermedias</span>
+          </label>
+          <p className={styles.checkboxHint}>
+            Desactiva para ver solo rutas directas
+          </p>
         </div>
       </div>
 

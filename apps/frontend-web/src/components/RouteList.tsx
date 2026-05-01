@@ -11,6 +11,17 @@ export interface Route {
   paradas?: string[];
   horaSalida?: string;
   horaLlegada?: string;
+  turnos?: Array<{
+    id: number;
+    fecha: string;
+    horaInicio: string;
+    horaFin?: string;
+    estado: string;
+    bus?: {
+      placa: string;
+      marca: string;
+    };
+  }>;
 }
 
 interface RouteListProps {
@@ -144,6 +155,32 @@ export default function RouteList({
                           {parada}
                         </span>
                       ))}
+                    </div>
+                  </div>
+                )}
+
+                {route.turnos && route.turnos.length > 0 && (
+                  <div className={styles.turnosSection}>
+                    <p className={styles.turnosLabel}>🚌 Turnos Disponibles:</p>
+                    <div className={styles.turnosList}>
+                      {route.turnos.slice(0, 3).map((turno) => (
+                        <div key={turno.id} className={styles.turnoBadge}>
+                          <div className={styles.turnoTime}>
+                            {turno.horaInicio}
+                            {turno.horaFin && ` - ${turno.horaFin}`}
+                          </div>
+                          {turno.bus && (
+                            <div className={styles.turnoBus}>
+                              🚐 {turno.bus.placa}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                      {route.turnos.length > 3 && (
+                        <span className={styles.moreIndicator}>
+                          +{route.turnos.length - 3} más
+                        </span>
+                      )}
                     </div>
                   </div>
                 )}
