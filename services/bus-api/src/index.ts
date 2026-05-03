@@ -5,6 +5,8 @@ import { PrismaClient } from '@prisma/client';
 
 import busRoutes from './routes/bus.routes';
 import rutaRoutes from './routes/ruta.routes';
+import turnoRoutes from './routes/turno.routes';
+import descuentoRoutes from './routes/descuento.routes';
 
 dotenv.config();
 
@@ -18,6 +20,8 @@ app.use(express.json());
 // Routes
 app.use('/buses', busRoutes);
 app.use('/rutas', rutaRoutes);
+app.use('/turnos', turnoRoutes);
+app.use('/descuentos', descuentoRoutes);
 
 // Health Check
 app.get('/health', (req, res) => {

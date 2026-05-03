@@ -167,6 +167,15 @@ model AsientoTurno {
   @@map("asiento_turnos")
 }
 
+model Boleto {
+  id              Int          @id @default(autoincrement())
+  cedulaPasajero  String       @map("cedula_pasajero")
+  tipoTarifa      String       @default("NORMAL") @map("tipo_tarifa")
+  creadoEn        DateTime     @default(now()) @map("creado_en")
+
+  @@map("boletos_validacion")
+}
+
 // ============================================
 // ENUMS
 // ============================================
