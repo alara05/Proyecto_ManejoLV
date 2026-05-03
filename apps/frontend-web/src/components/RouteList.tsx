@@ -3,12 +3,13 @@
 import styles from './RouteList.module.css';
 
 export interface Route {
-  id: string;
+  id: number;
+  nombre: string;
   origen: string;
   destino: string;
-  precio: number;
-  duracion: number;
-  paradas?: string[];
+  precioPasaje: string | number; // Decimal de Prisma llega como string
+  duracionMin: number;
+  paradas?: Array<{ id: number; nombre: string; orden: number; latitud?: string; longitud?: string }>;
   horaSalida?: string;
   horaLlegada?: string;
   turnos?: Array<{
@@ -43,11 +44,11 @@ export default function RouteList({
   const isIntermediateStop = (ruta: Route): boolean => {
     if (!searchParams) return false;
     const { origen: searchOrigen, destino: searchDestino } = searchParams;
+    const paradasNombres = ruta.paradas?.map(p => p.nombre) || [];
     return !!(
       (ruta.origen !== searchOrigen || ruta.destino !== searchDestino) &&
-      ruta.paradas &&
-      ruta.paradas.includes(searchOrigen) &&
-      ruta.paradas.includes(searchDestino)
+      paradasNombres.includes(searchOrigen) &&
+      paradasNombres.includes(searchDestino)
     );
   };
 
@@ -116,14 +117,14 @@ export default function RouteList({
                   <div className={styles.detail}>
                     <span className={styles.detailLabel}>💵 Precio</span>
                     <span className={styles.detailValue}>
-                      ${route.precio.toLocaleString('es-CO')}
+                      ${parseFloat(String(route.precioPasaje)).toFixed(2)}
                     </span>
                   </div>
 
                   <div className={styles.detail}>
                     <span className={styles.detailLabel}>⏱️ Duración</span>
                     <span className={styles.detailValue}>
-                      {route.duracion}h
+                      {Math.round(route.duracionMin / 60)}h {route.duracionMin % 60 > 0 ? `${route.duracionMin % 60}min` : ''}
                     </span>
                   </div>
 
@@ -150,9 +151,9 @@ export default function RouteList({
                   <div className={styles.paradasSection}>
                     <p className={styles.paradasLabel}>📍 Paradas intermedias:</p>
                     <div className={styles.paradasList}>
-                      {route.paradas.map((parada, index) => (
-                        <span key={index} className={styles.paradaBadge}>
-                          {parada}
+                      {route.paradas.map((parada) => (
+                        <span key={parada.id} className={styles.paradaBadge}>
+                          {parada.nombre}
                         </span>
                       ))}
                     </div>
