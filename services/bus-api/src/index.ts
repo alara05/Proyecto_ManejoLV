@@ -7,6 +7,7 @@ import busRoutes from './routes/bus.routes';
 import rutaRoutes from './routes/ruta.routes';
 import turnoRoutes from './routes/turno.routes';
 import descuentoRoutes from './routes/descuento.routes';
+import asientoRoutes from './routes/asiento.routes';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use('/buses', busRoutes);
 app.use('/rutas', rutaRoutes);
 app.use('/turnos', turnoRoutes);
+app.use('/turnos', asientoRoutes); // Asientos anidados bajo /turnos/:turnoId/asientos
 app.use('/descuentos', descuentoRoutes);
 
 // Health Check

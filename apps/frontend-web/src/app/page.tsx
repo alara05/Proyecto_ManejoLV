@@ -53,8 +53,9 @@ export default function Home() {
 
       queryParams.append('incluirParadas', formData.incluirParadas.toString());
 
-      // API endpoint sin prefijo /api
-      const apiUrl = `http://localhost:3002/rutas/search?${queryParams}`;
+      // API endpoint usando variable de entorno
+      const API_URL = process.env.NEXT_PUBLIC_BUS_API_URL || 'http://localhost:3002';
+      const apiUrl = `${API_URL}/rutas/search?${queryParams}`;
 
       const response = await fetch(apiUrl);
 
@@ -79,7 +80,7 @@ export default function Home() {
       setError(
         err instanceof Error
           ? err.message
-          : 'Error al conectar con el servidor. Asegúrate de que el backend está corriendo en http://localhost:3001'
+          : 'Error al conectar con el servidor. Asegúrate de que el backend está corriendo en http://localhost:3002'
       );
     } finally {
       setIsLoading(false);

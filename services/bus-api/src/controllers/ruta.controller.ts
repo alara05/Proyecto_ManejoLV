@@ -79,7 +79,8 @@ export const searchRutas = async (req: Request, res: Response) => {
   try {
     // Validar parámetros numéricos para evitar errores de Prisma
     const priceFilter = maxPrecio ? parseFloat(String(maxPrecio)) : undefined;
-    const durationFilter = maxDuracion ? parseInt(String(maxDuracion)) : undefined;
+    // El frontend envía horas, la DB almacena minutos → convertimos
+    const durationFilter = maxDuracion ? parseInt(String(maxDuracion)) * 60 : undefined;
     const incluirParadasIntermedias = incluirParadas !== 'false'; // Default true
 
     const rutas = await prisma.ruta.findMany({

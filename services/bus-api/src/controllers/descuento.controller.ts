@@ -19,22 +19,22 @@ export const validarDescuento = async (req: Request, res: Response) => {
     const hace24Horas = new Date();
     hace24Horas.setHours(hace24Horas.getHours() - 24);
 
-    // 2. Usamos SQL Crudo para saltar el error del cliente de Prisma
-    const query = `
-      SELECT * FROM boletos_validacion 
-      WHERE cedula_pasajero = $1 
-      AND tipo_tarifa != 'NORMAL' 
-      AND creado_en >= $2 
-      LIMIT 1
-    `;
-    
-    const result = await (prisma as any).$queryRawUnsafe(query, cedula, hace24Horas);
+    // 2. Buscar si existe un boleto con descuento para esa cédula en las últimas 24h
+    // TECH-DEBT: Usar Raw SQL porque `prisma generate` falla en Windows por bug del .wasm
+    // TODO Sprint 2: Reemplazar por prisma.boleto.findFirst() cuando el entorno esté estabilizado
+    const boletoReciente = await prisma.$queryRawUnsafe<Array<{creado_en: Date}>>(
+      `SELECT creado_en FROM boletos_validacion 
+       WHERE cedula_pasajero = $1 AND tipo_tarifa != 'NORMAL' AND creado_en >= $2 
+       LIMIT 1`,
+      cedula,
+      hace24Horas
+    );
 
-    if (Array.isArray(result) && result.length > 0) {
+    if (boletoReciente.length > 0) {
       return res.status(403).json({
         allowed: false,
         message: 'Esta cédula ya utilizó un beneficio de descuento en las últimas 24 horas.',
-        ultimoUso: result[0].creado_en,
+        ultimoUso: boletoReciente[0].creado_en,
       });
     }
 
