@@ -100,11 +100,11 @@ export const generarTurnosDia = async (req: Request, res: Response) => {
             where: { busId: busAsignado.id },
           });
 
-          await (prisma as any).asientoTurno.createMany({
-            data: asientosBus.map((asiento: any) => ({
+          await prisma.asientoTurno.createMany({
+            data: asientosBus.map((asiento) => ({
               turnoId: nuevoTurno.id,
               asientoId: asiento.id,
-              estado: 'DISPONIBLE',
+              estado: 'DISPONIBLE' as const,
             })),
           });
 
