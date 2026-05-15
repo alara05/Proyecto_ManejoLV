@@ -1,0 +1,26 @@
+name: Enviar solicitud de cambio a Jira
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  enviar-a-jira:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Enviar Issue de GitHub a Jira
+        run: |
+          curl -X POST "${{ secrets.JIRA_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -H "X-Automation-Webhook-Token: ${{ secrets.JIRA_WEBHOOK_SECRET }}" \
+            -d '{
+              "issue": {
+                "title": "${{ github.event.issue.title }}",
+                "body": ${{ toJson(github.event.issue.body) }},
+                "html_url": "${{ github.event.issue.html_url }}"
+              },
+              "repository": {
+                "full_name": "${{ github.repository }}"
+              }
+            }'
