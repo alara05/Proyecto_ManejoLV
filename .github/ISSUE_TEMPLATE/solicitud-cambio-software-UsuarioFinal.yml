@@ -1,0 +1,207 @@
+solicitud_cambio_software_usuario_final:
+  titulo: "Solicitud de Cambio de Software para Usuarios Finales"
+  descripcion: "Formulario simple para que los usuarios finales soliciten cambios, mejoras o reporten problemas en un sistema."
+
+  secciones:
+    - numero: 1
+      titulo: "Datos de la solicitud"
+      campos:
+        - nombre: "codigo_solicitud"
+          etiqueta: "Código de solicitud"
+          tipo: "texto"
+          ejemplo: "CR-2026-001"
+          requerido: true
+
+        - nombre: "fecha_solicitud"
+          etiqueta: "Fecha de solicitud"
+          tipo: "fecha"
+          ejemplo: "DD/MM/AAAA"
+          requerido: true
+
+        - nombre: "nombre_sistema"
+          etiqueta: "Nombre del sistema o aplicación"
+          tipo: "texto"
+          ejemplo: "Sistema de Gestión de Buses"
+          requerido: true
+
+        - nombre: "pantalla_seccion"
+          etiqueta: "Pantalla o sección donde ocurre el problema"
+          tipo: "texto"
+          ejemplo: "Inicio de sesión, Reportes, Usuarios, Tickets, Rutas"
+          requerido: true
+
+    - numero: 2
+      titulo: "Datos del usuario solicitante"
+      campos:
+        - nombre: "nombre_usuario"
+          etiqueta: "Nombre del usuario"
+          tipo: "texto"
+          requerido: true
+
+        - nombre: "area_departamento"
+          etiqueta: "Área o departamento"
+          tipo: "texto"
+          requerido: true
+
+        - nombre: "contacto"
+          etiqueta: "Correo o número de contacto"
+          tipo: "texto"
+          requerido: true
+
+        - nombre: "cargo_funcion"
+          etiqueta: "Cargo o función"
+          tipo: "texto"
+          requerido: false
+
+    - numero: 3
+      titulo: "Motivo de la solicitud"
+      descripcion: "Marque la opción que mejor describa su solicitud."
+      campos:
+        - nombre: "motivo_solicitud"
+          etiqueta: "Motivo de la solicitud"
+          tipo: "seleccion_unica"
+          requerido: true
+          opciones:
+            - "Hay un error en el sistema"
+            - "Necesito que se agregue una nueva función"
+            - "Quiero mejorar algo que ya existe"
+            - "El sistema está lento o no responde bien"
+            - "No puedo realizar una tarea importante"
+            - "Otro motivo"
+
+        - nombre: "otro_motivo"
+          etiqueta: "Si marcó otro motivo, explique cuál"
+          tipo: "texto_largo"
+          requerido: false
+
+    - numero: 4
+      titulo: "Nivel de importancia"
+      descripcion: "Marque qué tan importante es esta solicitud."
+      campos:
+        - nombre: "nivel_importancia"
+          etiqueta: "Nivel de importancia"
+          tipo: "seleccion_unica"
+          requerido: true
+          opciones:
+            - valor: "Baja"
+              descripcion: "Puede esperar"
+            - valor: "Media"
+              descripcion: "Es importante, pero no urgente"
+            - valor: "Alta"
+              descripcion: "Afecta mi trabajo diario"
+            - valor: "Urgente"
+              descripcion: "Necesito solución lo antes posible"
+            - valor: "Crítica"
+              descripcion: "El sistema no permite trabajar"
+
+    - numero: 5
+      titulo: "Descripción de la solicitud"
+      campos:
+        - nombre: "descripcion_solicitud"
+          etiqueta: "Explique con sus propias palabras qué necesita que se cambie, arregle o mejore"
+          tipo: "texto_largo"
+          requerido: true
+
+    - numero: 6
+      titulo: "Problema actual"
+      campos:
+        - nombre: "problema_actual"
+          etiqueta: "Explique qué sucede ahora en el sistema y por qué le causa dificultad"
+          tipo: "texto_largo"
+          requerido: true
+
+    - numero: 7
+      titulo: "Resultado esperado"
+      campos:
+        - nombre: "resultado_esperado"
+          etiqueta: "Explique cómo le gustaría que funcione el sistema después del cambio"
+          tipo: "texto_largo"
+          requerido: true
+
+    - numero: 8
+      titulo: "Personas o áreas afectadas"
+      descripcion: "Indique quiénes se ven afectados por este problema o necesidad."
+      campos:
+        - nombre: "personas_afectadas"
+          etiqueta: "Personas o áreas afectadas"
+          tipo: "seleccion_unica"
+          requerido: true
+          opciones:
+            - "Solo yo"
+            - "Mi área o departamento"
+            - "Varios departamentos"
+            - "Todos los usuarios del sistema"
+            - "Clientes o personas externas"
+
+        - nombre: "detalle_afectados"
+          etiqueta: "Explique brevemente quiénes se ven afectados"
+          tipo: "texto_largo"
+          requerido: false
+
+    - numero: 9
+      titulo: "Ejemplo del caso"
+      campos:
+        - nombre: "ejemplo_caso"
+          etiqueta: "Describa un ejemplo real de cuándo ocurre el problema o cuándo necesita esta mejora"
+          tipo: "texto_largo"
+          ejemplo: "Cuando intento generar un reporte, el sistema tarda mucho y no descarga el archivo."
+          requerido: true
+
+    - numero: 10
+      titulo: "Evidencias o archivos adjuntos"
+      campos:
+        - nombre: "evidencias"
+          etiqueta: "Agregue capturas, fotos, documentos o archivos que ayuden a entender la solicitud"
+          tipo: "archivo"
+          requerido: false
+          formatos_permitidos:
+            - "jpg"
+            - "png"
+            - "pdf"
+            - "docx"
+            - "xlsx"
+
+    - numero: 11
+      titulo: "Comentario adicional"
+      campos:
+        - nombre: "comentario_adicional"
+          etiqueta: "Agregue cualquier información adicional que considere importante"
+          tipo: "texto_largo"
+          requerido: false
+
+    - numero: 12
+      titulo: "Revisión inicial"
+      descripcion: "Esta parte será completada por el equipo encargado."
+      campos:
+        - nombre: "estado_revision"
+          etiqueta: "Estado de revisión"
+          tipo: "seleccion_unica"
+          requerido: false
+          opciones:
+            - "Pendiente de revisión"
+            - "Aprobado"
+            - "Rechazado"
+            - "Se necesita más información"
+
+        - nombre: "observaciones_revision"
+          etiqueta: "Observaciones"
+          tipo: "texto_largo"
+          requerido: false
+
+    - numero: 13
+      titulo: "Responsable de atención"
+      campos:
+        - nombre: "responsable_atencion"
+          etiqueta: "Nombre de la persona encargada"
+          tipo: "texto"
+          requerido: false
+
+        - nombre: "fecha_revision"
+          etiqueta: "Fecha de revisión"
+          tipo: "fecha"
+          requerido: false
+
+        - nombre: "comentario_final"
+          etiqueta: "Comentario final"
+          tipo: "texto_largo"
+          requerido: false
