@@ -1,5 +1,5 @@
 ﻿const CONFIG_APP = {
-    API_BASE_URL: localStorage.getItem("API_BASE_URL") || "http://192.168.0.103:8085",
+    API_BASE_URL: localStorage.getItem("API_BASE_URL") || "http://192.168.0.103:8086",
     API_PATH: "/api"
 };
 
