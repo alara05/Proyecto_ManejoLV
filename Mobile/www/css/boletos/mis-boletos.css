@@ -1,0 +1,8 @@
+﻿.estado-boleto {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: #e0f2fe;
+    color: #075985;
+    font-size: 12px;
+}

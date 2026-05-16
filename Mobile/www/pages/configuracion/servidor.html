@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Servidor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../css/app.css">
+</head>
+<body>
+    <header class="topbar">
+        <a href="../auth/login.html">Volver</a>
+        <h1>Servidor</h1>
+    </header>
+
+    <main class="contenedor">
+        <section class="form-card">
+            <label>URL del servidor Laravel</label>
+            <input type="text" id="apiUrl" placeholder="http://192.168.1.10:8000">
+
+            <button id="btnGuardarServidor">Guardar servidor</button>
+
+            <div id="mensajeServidor" class="mensaje"></div>
+        </section>
+    </main>
+
+    <script src="../../js/config.js"></script>
+    <script src="../../js/helpers/storage.js"></script>
+    <script src="../../js/configuracion/servidor.js"></script>
+</body>
+</html>

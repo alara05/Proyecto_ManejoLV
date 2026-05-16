@@ -1,0 +1,11 @@
+﻿.banner-home {
+    background: #0d47a1;
+    color: white;
+    padding: 22px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+}
+
+.banner-home h2 {
+    margin-top: 0;
+}

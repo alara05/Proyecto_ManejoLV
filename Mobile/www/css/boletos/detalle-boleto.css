@@ -1,0 +1,9 @@
+﻿.boleto-card {
+    text-align: center;
+}
+
+.boleto-card img {
+    width: 180px;
+    max-width: 100%;
+    margin: 14px auto;
+}

@@ -1,0 +1,8 @@
+{
+  "appId": "ec.edu.uta.sistemapasajeusuario",
+  "appName": "Pasajes Usuario",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}

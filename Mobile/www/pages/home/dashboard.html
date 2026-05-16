@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../css/app.css">
+    <link rel="stylesheet" href="../../css/home/dashboard.css">
+</head>
+<body>
+    <header class="topbar">
+        <div>
+            <h1>Pasajes</h1>
+            <span id="nombreUsuario">Usuario</span>
+        </div>
+        <button id="btnSalir" class="btn-mini">Salir</button>
+    </header>
+
+    <main class="contenedor">
+        <section class="banner-home">
+            <h2>Â¿A dÃ³nde viajas hoy?</h2>
+            <p>Busca tu destino y compra tu boleto.</p>
+            <a href="../viajes/buscar.html" class="btn-principal">Buscar viaje</a>
+        </section>
+
+        <section class="grid-menu">
+            <a href="../viajes/buscar.html" class="card-menu">Comprar boleto</a>
+            <a href="../boletos/mis-boletos.html" class="card-menu">Mis boletos</a>
+            <a href="../notificaciones/notificaciones.html" class="card-menu">Notificaciones</a>
+            <a href="../perfil/perfil.html" class="card-menu">Mi perfil</a>
+        </section>
+    </main>
+
+    <script src="../../js/helpers/storage.js"></script>
+    <script src="../../js/auth/auth-guard.js"></script>
+    <script src="../../js/home/dashboard.js"></script>
+</body>
+</html>
