@@ -1,31 +1,37 @@
-﻿document.getElementById("formRegister").addEventListener("submit", async function (e) {
-    e.preventDefault();
-
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("formRegister");
     const mensaje = document.getElementById("mensajeRegister");
 
-    const datos = {
-        nombre: document.getElementById("nombre").value.trim(),
-        apellido: document.getElementById("apellido").value.trim(),
-        cedula: document.getElementById("cedula").value.trim(),
-        telefono: document.getElementById("telefono").value.trim(),
-        email: document.getElementById("email").value.trim(),
-        password: document.getElementById("password").value.trim()
-    };
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
 
-    try {
-        mensaje.textContent = "Creando cuenta...";
+        const datos = {
+            nombre: document.getElementById("nombre").value.trim(),
+            apellido: document.getElementById("apellido").value.trim(),
+            cedula: document.getElementById("cedula").value.trim(),
+            telefono: document.getElementById("telefono").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            password: document.getElementById("password").value.trim()
+        };
 
-        await apiRequest("/mobile/register", {
-            method: "POST",
-            body: JSON.stringify(datos)
-        });
+        try {
+            mensaje.textContent = "Creando cuenta...";
 
-        mensaje.textContent = "Cuenta creada correctamente. Ya puedes iniciar sesiÃ³n.";
+            const data = await apiRequest("/mobile/register", {
+                method: "POST",
+                body: JSON.stringify(datos)
+            });
 
-        setTimeout(function () {
-            window.location.href = "./login.html";
-        }, 1200);
-    } catch (error) {
-        mensaje.textContent = error.mensaje || "No se pudo crear la cuenta.";
-    }
+            localStorage.setItem("TOKEN_APP", data.token || "");
+            localStorage.setItem("USUARIO_APP", JSON.stringify(data.usuario || {}));
+
+            mensaje.textContent = "Cuenta creada correctamente. Redirigiendo...";
+
+            setTimeout(function () {
+                window.location.href = "../home/dashboard.html";
+            }, 800);
+        } catch (error) {
+            mensaje.textContent = error.mensaje || "No se pudo crear la cuenta.";
+        }
+    });
 });
