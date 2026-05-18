@@ -5,8 +5,13 @@
         <p class="text-sm font-medium text-slate-500">Sesion iniciada</p>
         <h1 class="mt-2 text-2xl font-semibold">Bienvenido, {{ auth()->user()->name }}</h1>
         <p class="mt-2 text-slate-600">Rol actual: {{ auth()->user()->role }}</p>
-        <a href="{{ route('buses.index') }}" class="mt-5 inline-flex rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700">
-            Gestionar buses
-        </a>
+        <div class="mt-5 flex flex-wrap gap-3">
+            <a href="{{ route('buses.index') }}" class="inline-flex rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700">
+                Gestionar buses
+            </a>
+            <a href="{{ route('rutas.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
+                Gestionar rutas
+            </a>
+        </div>
     </section>
 @endsection

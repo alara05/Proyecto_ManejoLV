@@ -15,6 +15,7 @@
                 @auth
                     <a href="{{ route('dashboard') }}" class="font-medium text-slate-700 hover:text-slate-950">Panel</a>
                     <a href="{{ route('buses.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Buses</a>
+                    <a href="{{ route('rutas.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Rutas</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="rounded bg-slate-900 px-3 py-2 font-medium text-white hover:bg-slate-700">
