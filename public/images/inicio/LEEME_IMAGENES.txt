@@ -1,0 +1,7 @@
+Coloca tus imagenes de la pagina de inicio en esta carpeta con estos nombres:
+
+1. panel-boletos.jpg
+2. panel-rutas.jpg
+3. panel-control.jpg
+
+Si no colocas imagenes todavia, la interfaz funciona igual con fondos degradados.
