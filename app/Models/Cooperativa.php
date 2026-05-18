@@ -34,6 +34,11 @@ class Cooperativa extends Model
         return $this->hasMany(Frecuencia::class);
     }
 
+    public function rutas(): HasMany
+    {
+        return $this->hasMany(Ruta::class);
+    }
+
     public function usuarios(): HasMany
     {
         return $this->hasMany(User::class);

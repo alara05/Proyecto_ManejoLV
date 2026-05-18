@@ -36,4 +36,9 @@ class Bus extends Model
     {
         return $this->hasMany(Asiento::class);
     }
+
+    public function rutas(): HasMany
+    {
+        return $this->hasMany(Ruta::class);
+    }
 }
