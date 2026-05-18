@@ -24,7 +24,10 @@ return new class extends Migration
             $table->boolean('activa')->default(true);
             $table->timestamps();
 
-            $table->unique(['cooperativa_id', 'ciudad_origen_id', 'ciudad_destino_id', 'nombre']);
+            $table->unique(
+                ['cooperativa_id', 'ciudad_origen_id', 'ciudad_destino_id', 'nombre'],
+                'rutas_coop_origen_destino_nombre_unique'
+            );
         });
     }
 

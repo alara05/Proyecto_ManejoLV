@@ -6,66 +6,65 @@
             <p class="text-sm font-medium text-slate-500">Gestion de rutas</p>
             <h1 class="text-2xl font-semibold">Rutas</h1>
         </div>
-        <a href="{{ route('rutas.create') }}" class="rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700">
+        <a href="{{ route('rutas.create') }}" class="rounded bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700">
             Nueva ruta
         </a>
     </div>
 
-    @if (session('success'))
-        <div class="mb-5 rounded border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
-            {{ session('success') }}
-        </div>
-    @endif
+    @include('partials.flash')
 
     <section class="overflow-hidden rounded bg-white shadow-sm">
-        <table class="w-full border-collapse text-left text-sm">
-            <thead class="bg-slate-50 text-slate-600">
-                <tr>
-                    <th class="px-4 py-3 font-medium">Ruta</th>
-                    <th class="px-4 py-3 font-medium">Cooperativa</th>
-                    <th class="px-4 py-3 font-medium">Origen</th>
-                    <th class="px-4 py-3 font-medium">Destino</th>
-                    <th class="px-4 py-3 font-medium">Bus</th>
-                    <th class="px-4 py-3 font-medium">Estado</th>
-                    <th class="px-4 py-3 font-medium">Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100">
-                @forelse ($rutas as $ruta)
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-[860px] border-collapse text-left text-sm">
+                <thead class="bg-slate-50 text-slate-600">
                     <tr>
-                        <td class="px-4 py-3 font-medium">{{ $ruta->nombre }}</td>
-                        <td class="px-4 py-3">{{ $ruta->cooperativa->nombre }}</td>
-                        <td class="px-4 py-3">{{ $ruta->origen->nombre }}</td>
-                        <td class="px-4 py-3">{{ $ruta->destino->nombre }}</td>
-                        <td class="px-4 py-3">
-                            {{ $ruta->bus ? 'Bus ' . $ruta->bus->numero . ' - ' . $ruta->bus->placa : 'Sin asignar' }}
-                        </td>
-                        <td class="px-4 py-3">
-                            <span class="rounded px-2 py-1 text-xs font-medium {{ $ruta->activa ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600' }}">
-                                {{ $ruta->activa ? 'Activa' : 'Inactiva' }}
-                            </span>
-                        </td>
-                        <td class="px-4 py-3">
-                            <div class="flex flex-wrap gap-2">
-                                <a href="{{ route('rutas.show', $ruta) }}" class="text-slate-700 hover:text-slate-950">Ver</a>
-                                <a href="{{ route('rutas.edit', $ruta) }}" class="text-blue-700 hover:text-blue-900">Editar</a>
-                                <form method="POST" action="{{ route('rutas.destroy', $ruta) }}" onsubmit="return confirm('Desea eliminar esta ruta?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-800">Eliminar</button>
-                                </form>
-                            </div>
-                        </td>
+                        <th class="px-4 py-3 font-semibold">Ruta</th>
+                        <th class="px-4 py-3 font-semibold">Cooperativa</th>
+                        <th class="px-4 py-3 font-semibold">Trayecto</th>
+                        <th class="px-4 py-3 font-semibold">Bus</th>
+                        <th class="px-4 py-3 font-semibold">Tipo</th>
+                        <th class="px-4 py-3 font-semibold">Estado</th>
+                        <th class="px-4 py-3 font-semibold">Acciones</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="7" class="px-4 py-8 text-center text-slate-500">
-                            Todavia no hay rutas registradas.
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @forelse ($rutas as $ruta)
+                        <tr class="align-top hover:bg-slate-50/70">
+                            <td class="px-4 py-3 font-semibold text-slate-900">{{ $ruta->nombre }}</td>
+                            <td class="px-4 py-3">{{ $ruta->cooperativa->nombre }}</td>
+                            <td class="px-4 py-3">
+                                <p>{{ $ruta->origen->nombre }}</p>
+                                <p class="text-xs text-slate-500">a {{ $ruta->destino->nombre }}</p>
+                            </td>
+                            <td class="px-4 py-3">
+                                {{ $ruta->bus ? 'Bus ' . $ruta->bus->numero . ' - ' . $ruta->bus->placa : 'Sin asignar' }}
+                            </td>
+                            <td class="px-4 py-3">{{ $ruta->tipo_viaje === 'directo' ? 'Directo' : 'Con paradas' }}</td>
+                            <td class="px-4 py-3">
+                                @include('partials.status-badge', ['active' => $ruta->activa, 'trueLabel' => 'Activa', 'falseLabel' => 'Inactiva'])
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="flex flex-wrap gap-2">
+                                    <a href="{{ route('rutas.show', $ruta) }}" class="rounded border border-slate-200 px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-white">Ver</a>
+                                    <a href="{{ route('rutas.edit', $ruta) }}" class="rounded border border-blue-200 px-2.5 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-50">Editar</a>
+                                    <form method="POST" action="{{ route('rutas.destroy', $ruta) }}" onsubmit="return confirm('Desea eliminar esta ruta?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="rounded border border-red-200 px-2.5 py-1 text-xs font-semibold text-red-700 hover:bg-red-50">Eliminar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="px-4 py-10 text-center text-slate-500">
+                                Todavia no hay rutas registradas.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </section>
 
     <div class="mt-5">
