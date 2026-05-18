@@ -1,40 +1,71 @@
-@extends('layouts.app')
+@extends('layouts.principal')
+
+@section('title', 'Inicio | ' . config('app.name', 'Sistema de Pasajes'))
 
 @section('content')
-    <section class="grid gap-8 py-10 md:grid-cols-[1.2fr_0.8fr] md:items-center">
-        <div>
-            <p class="text-sm font-semibold uppercase tracking-wide text-amber-600">Transporte interprovincial</p>
-            <h1 class="mt-3 max-w-2xl text-4xl font-bold text-slate-950">
-                Gestion y venta de pasajes para cooperativas del Ecuador
-            </h1>
-            <p class="mt-4 max-w-xl text-lg text-slate-600">
-                Plataforma base para administrar cooperativas, frecuencias, buses, boletos y acceso de pasajeros.
-            </p>
+<section class="hero" id="inicio">
+    <button class="hero-arrow hero-arrow-left" type="button" aria-label="Ver seccion anterior" data-hero-prev>‹</button>
 
-            <div class="mt-8 flex flex-wrap gap-3">
-                @auth
-                    <a href="{{ route('dashboard') }}" class="rounded bg-slate-900 px-5 py-3 font-medium text-white hover:bg-slate-700">
-                        Ir al panel
-                    </a>
-                @else
-                    <a href="{{ route('login') }}" class="rounded bg-slate-900 px-5 py-3 font-medium text-white hover:bg-slate-700">
-                        Ingresar
-                    </a>
-                    <a href="{{ route('register') }}" class="rounded border border-slate-300 px-5 py-3 font-medium text-slate-800 hover:bg-white">
-                        Crear cuenta
-                    </a>
-                @endauth
+    <div class="hero-grid" data-hero-grid>
+        <article class="hero-card hero-card-one" style="--hero-image: url('{{ asset('images/inicio/panel-boletos.jpg') }}')">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-kicker">Sistema de pasajes</span>
+                <h1>Gestiona tus boletos</h1>
+                <p>Consulta rutas, salidas y disponibilidad desde una interfaz rapida, moderna y facil de usar.</p>
+                <a href="{{ url('/register') }}" class="hero-link">Crear cuenta</a>
             </div>
-        </div>
+        </article>
 
-        <div class="rounded bg-white p-6 shadow-sm">
-            <h2 class="text-lg font-semibold">Autenticacion activa</h2>
-            <ul class="mt-4 space-y-3 text-sm text-slate-600">
-                <li>Registro de clientes con nombre, cedula, telefono, email y contrasena.</li>
-                <li>Inicio de sesion con validacion de usuario activo.</li>
-                <li>Cierre de sesion seguro con invalidacion de sesion.</li>
-                <li>Panel protegido para usuarios autenticados.</li>
-            </ul>
-        </div>
-    </section>
+        <article class="hero-card hero-card-two" style="--hero-image: url('{{ asset('images/inicio/panel-rutas.jpg') }}')">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-kicker">Rutas y cooperativas</span>
+                <h2>Encuentra tu viaje</h2>
+                <p>Organiza la informacion principal de ciudades, frecuencias, buses y cooperativas.</p>
+                <a href="#rutas" class="hero-link">Ver estructura</a>
+            </div>
+        </article>
+
+        <article class="hero-card hero-card-three" style="--hero-image: url('{{ asset('images/inicio/panel-control.jpg') }}')">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-kicker">Panel seguro</span>
+                <h2>Administra el sistema</h2>
+                <p>Accede con tus credenciales para controlar usuarios, ventas, buses, asientos y reportes.</p>
+                <a href="{{ url('/login') }}" class="hero-link">Iniciar sesion</a>
+            </div>
+        </article>
+    </div>
+
+    <button class="hero-arrow hero-arrow-right" type="button" aria-label="Ver seccion siguiente" data-hero-next>›</button>
+</section>
+
+<section class="intro-section" id="servicios">
+    <div class="section-heading">
+        <span>Interfaz principal</span>
+        <h2>Una pagina de inicio preparada para presentar la aplicacion</h2>
+        <p>Esta vista funciona como portada del sistema. Las imagenes se pueden reemplazar luego desde la carpeta publica del proyecto.</p>
+    </div>
+
+    <div class="feature-grid">
+        <article class="feature-card">
+            <div class="feature-icon">01</div>
+            <h3>Acceso rapido</h3>
+            <p>Botones visibles para registrarse e iniciar sesion desde la parte superior derecha.</p>
+        </article>
+
+        <article class="feature-card" id="rutas">
+            <div class="feature-icon">02</div>
+            <h3>Navegacion clara</h3>
+            <p>Menu principal listo para conectar futuras secciones como rutas, boletos, cooperativas y ayuda.</p>
+        </article>
+
+        <article class="feature-card" id="beneficios">
+            <div class="feature-icon">03</div>
+            <h3>Visual profesional</h3>
+            <p>Diseno oscuro, tarjetas grandes, textos destacados y estructura responsive para escritorio y movil.</p>
+        </article>
+    </div>
+</section>
 @endsection
