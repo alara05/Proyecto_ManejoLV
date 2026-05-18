@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS boletos;
 DROP TABLE IF EXISTS salidas;
 DROP TABLE IF EXISTS asientos;
 DROP TABLE IF EXISTS tipo_asientos;
+DROP TABLE IF EXISTS rutas;
 DROP TABLE IF EXISTS buses;
 DROP TABLE IF EXISTS frecuencia_paradas;
 DROP TABLE IF EXISTS frecuencias;
@@ -135,6 +136,37 @@ CREATE TABLE buses (
   CONSTRAINT buses_cooperativa_id_foreign
     FOREIGN KEY (cooperativa_id) REFERENCES cooperativas(id)
     ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE rutas (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  cooperativa_id BIGINT UNSIGNED NOT NULL,
+  bus_id BIGINT UNSIGNED NULL,
+  ciudad_origen_id BIGINT UNSIGNED NOT NULL,
+  ciudad_destino_id BIGINT UNSIGNED NOT NULL,
+  nombre VARCHAR(255) NOT NULL,
+  tipo_viaje ENUM('directo', 'con_paradas') NOT NULL DEFAULT 'directo',
+  distancia_km DECIMAL(8,2) NULL,
+  duracion_minutos SMALLINT UNSIGNED NULL,
+  activa TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NULL DEFAULT NULL,
+  updated_at TIMESTAMP NULL DEFAULT NULL,
+  UNIQUE KEY rutas_coop_origen_destino_nombre_unique (cooperativa_id, ciudad_origen_id, ciudad_destino_id, nombre),
+  KEY rutas_bus_id_index (bus_id),
+  KEY rutas_ciudad_origen_id_index (ciudad_origen_id),
+  KEY rutas_ciudad_destino_id_index (ciudad_destino_id),
+  CONSTRAINT rutas_cooperativa_id_foreign
+    FOREIGN KEY (cooperativa_id) REFERENCES cooperativas(id)
+    ON DELETE CASCADE,
+  CONSTRAINT rutas_bus_id_foreign
+    FOREIGN KEY (bus_id) REFERENCES buses(id)
+    ON DELETE SET NULL,
+  CONSTRAINT rutas_ciudad_origen_id_foreign
+    FOREIGN KEY (ciudad_origen_id) REFERENCES ciudades(id)
+    ON DELETE RESTRICT,
+  CONSTRAINT rutas_ciudad_destino_id_foreign
+    FOREIGN KEY (ciudad_destino_id) REFERENCES ciudades(id)
+    ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE tipo_asientos (
@@ -352,4 +384,3 @@ CREATE TABLE migrations (
   migration VARCHAR(255) NOT NULL,
   batch INT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
