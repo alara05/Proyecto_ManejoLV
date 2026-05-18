@@ -12,6 +12,12 @@
             <a href="{{ route('buses.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
                 Gestionar buses
             </a>
+            <a href="{{ route('tipo-asientos.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Gestionar tipos de asientos
+            </a>
+            <a href="{{ route('asientos.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Gestionar asientos
+            </a>
             <a href="{{ route('rutas.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
                 Gestionar rutas
             </a>

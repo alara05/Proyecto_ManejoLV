@@ -186,7 +186,7 @@ if not errorlevel 1 (
 
 echo.
 echo Iniciando servidor Laravel en %APP_URL% ...
-start "Manejo Buses - Laravel" cmd /k ""%PHP_BIN%" -S 127.0.0.1:%APP_PORT% -t public vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php"
+start "Manejo Buses - Laravel" /D "%CD%\public" cmd /k ""%PHP_BIN%" -S 127.0.0.1:%APP_PORT% ..\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php"
 
 echo Esperando a que Laravel responda...
 call :wait_for_url "%APP_URL%" 30

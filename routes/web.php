@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\AsientoController;
 use App\Http\Controllers\BusController;
 use App\Http\Controllers\CooperativaController;
 use App\Http\Controllers\RutaController;
+use App\Http\Controllers\TipoAsientoController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('inicio');
@@ -21,6 +23,8 @@ Route::middleware('auth')->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
     Route::resource('cooperativas', CooperativaController::class);
     Route::resource('buses', BusController::class);
+    Route::resource('tipo-asientos', TipoAsientoController::class);
+    Route::resource('asientos', AsientoController::class);
     Route::resource('rutas', RutaController::class);
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

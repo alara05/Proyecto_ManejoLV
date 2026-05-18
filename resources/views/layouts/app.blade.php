@@ -16,6 +16,8 @@
                     <a href="{{ route('dashboard') }}" class="font-medium text-slate-700 hover:text-slate-950">Panel</a>
                     <a href="{{ route('cooperativas.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Cooperativas</a>
                     <a href="{{ route('buses.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Buses</a>
+                    <a href="{{ route('tipo-asientos.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Tipos de asientos</a>
+                    <a href="{{ route('asientos.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Asientos</a>
                     <a href="{{ route('rutas.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Rutas</a>
                     <form method="POST" action="{{ route('logout') }}" class="m-0">
                         @csrf
