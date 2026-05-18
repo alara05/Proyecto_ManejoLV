@@ -3,7 +3,9 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BusController;
+use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\CooperativaController;
+use App\Http\Controllers\ProvinciaController;
 use App\Http\Controllers\RutaController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +22,8 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
     Route::resource('cooperativas', CooperativaController::class);
+    Route::resource('provincias', ProvinciaController::class);
+    Route::resource('ciudades', CiudadController::class)->parameters(['ciudades' => 'ciudad']);
     Route::resource('buses', BusController::class);
     Route::resource('rutas', RutaController::class);
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');

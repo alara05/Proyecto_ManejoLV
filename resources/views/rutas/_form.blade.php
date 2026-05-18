@@ -42,7 +42,7 @@
             <option value="">Seleccione origen</option>
             @foreach ($ciudades as $ciudad)
                 <option value="{{ $ciudad->id }}" @selected(old('ciudad_origen_id', $ruta->ciudad_origen_id ?? '') == $ciudad->id)>
-                    {{ $ciudad->nombre }} - {{ $ciudad->provincia }}
+                    {{ $ciudad->nombre }} - {{ $ciudad->provincia->nombre }}
                 </option>
             @endforeach
         </select>
@@ -58,7 +58,7 @@
             <option value="">Seleccione destino</option>
             @foreach ($ciudades as $ciudad)
                 <option value="{{ $ciudad->id }}" @selected(old('ciudad_destino_id', $ruta->ciudad_destino_id ?? '') == $ciudad->id)>
-                    {{ $ciudad->nombre }} - {{ $ciudad->provincia }}
+                    {{ $ciudad->nombre }} - {{ $ciudad->provincia->nombre }}
                 </option>
             @endforeach
         </select>
