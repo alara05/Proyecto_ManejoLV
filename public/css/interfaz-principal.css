@@ -115,6 +115,15 @@ a {
     min-width: max-content;
 }
 
+.logout-form {
+    margin: 0;
+}
+
+.logout-form .btn {
+    font-family: inherit;
+    cursor: pointer;
+}
+
 .btn {
     display: inline-flex;
     align-items: center;
