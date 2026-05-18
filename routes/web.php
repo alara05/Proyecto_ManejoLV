@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\BusController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('inicio');
@@ -16,5 +17,6 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::resource('buses', BusController::class);
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
