@@ -14,9 +14,14 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('cedula', 10)->nullable()->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('role', ['admin', 'cooperativa', 'oficinista', 'cliente', 'personal_bus'])->default('cliente');
+            $table->foreignId('cooperativa_id')->nullable()->index();
+            $table->string('telefono', 20)->nullable();
+            $table->boolean('activo')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });

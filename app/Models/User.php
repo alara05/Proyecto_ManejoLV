@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,8 +22,13 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'cedula',
         'email',
         'password',
+        'role',
+        'cooperativa_id',
+        'telefono',
+        'activo',
     ];
 
     /**
@@ -44,6 +51,17 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'activo' => 'boolean',
         ];
+    }
+
+    public function cooperativa(): BelongsTo
+    {
+        return $this->belongsTo(Cooperativa::class);
+    }
+
+    public function boletos(): HasMany
+    {
+        return $this->hasMany(Boleto::class);
     }
 }
