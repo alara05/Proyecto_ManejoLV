@@ -1,38 +1,57 @@
-@extends('layouts.app')
+@extends('layouts.principal')
+
+@section('title', 'Iniciar sesion | ' . config('app.name', 'Manejo Buses'))
 
 @section('content')
-    <section class="mx-auto max-w-md">
-        <h1 class="text-2xl font-semibold">Iniciar sesion</h1>
+    <section class="auth-page auth-page-login">
+        <div class="auth-shell">
+            <aside class="auth-visual" style="--auth-image: url('{{ asset('images/inicio/panel-control.jpg') }}')">
+                <div class="auth-visual-content">
+                    <span class="hero-kicker">Panel seguro</span>
+                    <h1>Gestiona buses y ventas</h1>
+                    <p>Accede al sistema para administrar cooperativas, rutas, asientos, boletos y pagos desde un solo panel.</p>
+                </div>
+            </aside>
 
-        <form method="POST" action="{{ route('login') }}" class="mt-6 space-y-5 rounded bg-white p-6 shadow-sm">
-            @csrf
+            <div class="auth-panel">
+                <div class="auth-heading">
+                    <span>Bienvenido de nuevo</span>
+                    <h2>Iniciar sesion</h2>
+                    <p>Usa tus credenciales para continuar con la gestion de pasajes.</p>
+                </div>
 
-            <div>
-                <label for="email" class="block text-sm font-medium">Correo electronico</label>
-                <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus
-                    class="mt-2 w-full rounded border border-slate-300 px-3 py-2 focus:border-slate-900 focus:outline-none">
-                @error('email')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
+                <form method="POST" action="{{ route('login') }}" class="auth-form">
+                    @csrf
+
+                    <div class="form-field">
+                        <label for="email">Correo electronico</label>
+                        <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus>
+                        @error('email')
+                            <p class="form-error">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="form-field">
+                        <label for="password">Contrasena</label>
+                        <input id="password" name="password" type="password" required>
+                        @error('password')
+                            <p class="form-error">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <label class="auth-check">
+                        <input type="checkbox" name="remember">
+                        <span>Recordar sesion</span>
+                    </label>
+
+                    <button type="submit" class="auth-submit">Ingresar</button>
+                </form>
+
+                <p class="auth-switch">
+                    Aun no tienes cuenta?
+                    <a href="{{ route('register') }}">Crear cuenta</a>
+                </p>
             </div>
-
-            <div>
-                <label for="password" class="block text-sm font-medium">Contrasena</label>
-                <input id="password" name="password" type="password" required
-                    class="mt-2 w-full rounded border border-slate-300 px-3 py-2 focus:border-slate-900 focus:outline-none">
-                @error('password')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <label class="flex items-center gap-2 text-sm">
-                <input type="checkbox" name="remember" class="rounded border-slate-300">
-                Recordar sesion
-            </label>
-
-            <button type="submit" class="w-full rounded bg-slate-900 px-4 py-2 font-medium text-white hover:bg-slate-700">
-                Ingresar
-            </button>
-        </form>
+        </div>
     </section>
 @endsection
