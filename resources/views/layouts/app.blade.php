@@ -21,7 +21,6 @@
                     <a href="{{ route('tipo-asientos.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Tipos de asientos</a>
                     <a href="{{ route('asientos.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Asientos</a>
                     <a href="{{ route('rutas.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Rutas</a>
-                    <a href="{{ route('frecuencias.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Frecuencias</a>
                     <form method="POST" action="{{ route('logout') }}" class="m-0">
                         @csrf
                         <button type="submit" class="rounded bg-slate-900 px-3 py-2 font-semibold text-white hover:bg-slate-700">
