@@ -12,6 +12,7 @@ class Boleto extends Model
     protected $fillable = [
         'salida_id',
         'user_id',
+        'vendido_por',
         'asiento_id',
         'ciudad_origen_id',
         'ciudad_destino_id',
@@ -42,6 +43,11 @@ class Boleto extends Model
     public function cliente(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function vendedor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'vendido_por');
     }
 
     public function asiento(): BelongsTo

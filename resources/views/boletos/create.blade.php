@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="mb-6">
-        <p class="text-sm font-medium text-slate-500">Seleccion de asientos</p>
-        <h1 class="text-2xl font-semibold">Vender boleto</h1>
+        <p class="text-sm font-medium text-slate-500">Venta interna de oficinista</p>
+        <h1 class="text-2xl font-semibold">Vender boleto en oficina</h1>
     </div>
 
     @include('partials.flash')
@@ -115,11 +115,26 @@
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
+
+                <div>
+                    <label for="tipo_descuento" class="block text-sm font-semibold text-slate-700">Tipo de descuento</label>
+                    <select id="tipo_descuento" name="tipo_descuento" required
+                        class="mt-2 w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-900 focus:outline-none">
+                        @foreach ($descuentos as $value => $label)
+                            <option value="{{ $value }}" @selected(old('tipo_descuento', 'ninguno') === $value)>
+                                {{ $label }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('tipo_descuento')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
             </div>
 
             <div class="mt-6 flex flex-wrap gap-3">
                 <button type="submit" class="rounded bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700">
-                    Vender boleto
+                    Confirmar venta
                 </button>
                 <a href="{{ route('boletos.index') }}" class="rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
                     Cancelar

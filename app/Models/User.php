@@ -64,4 +64,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Boleto::class);
     }
+
+    public function boletosVendidos(): HasMany
+    {
+        return $this->hasMany(Boleto::class, 'vendido_por');
+    }
 }
