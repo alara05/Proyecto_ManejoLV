@@ -12,6 +12,7 @@ class ClienteHistorialBoletoController extends Controller
         $boletos = Boleto::with([
             'salida.frecuencia.origen',
             'salida.frecuencia.destino',
+            'salida.bus',
             'asiento.tipoAsiento',
             'pago',
         ])
