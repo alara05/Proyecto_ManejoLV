@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Boleto;
 use App\Models\Pago;
+use App\Services\BoletoNotificationDispatcher;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -60,7 +61,7 @@ class PagoController extends Controller
 
         $path = $request->file('comprobante')->store('comprobantes', 'public');
 
-        Pago::updateOrCreate(
+        $pago = Pago::updateOrCreate(
             ['boleto_id' => $boleto->id],
             [
                 'validado_por' => null,
@@ -72,6 +73,8 @@ class PagoController extends Controller
                 'observacion' => $validated['observacion'] ?? null,
             ]
         );
+
+        app(BoletoNotificationDispatcher::class)->pagoPendiente($pago);
 
         return redirect()
             ->route('cliente.pagos.create', $boleto)
@@ -115,6 +118,9 @@ class PagoController extends Controller
             'estado' => 'pagado',
             'vendido_at' => now(),
         ]);
+
+        app(BoletoNotificationDispatcher::class)->pagoValidado($pago);
+        app(BoletoNotificationDispatcher::class)->boletoEmitido($pago->boleto);
 
         return redirect()
             ->route('pagos.show', $pago)

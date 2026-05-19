@@ -111,6 +111,11 @@
                     </label>
 
                     <label class="client-ticket-field">
+                        <span>Correo de contacto</span>
+                        <input name="cliente_email" type="email" value="{{ old('cliente_email', auth()->user()?->email) }}" @guest required @endguest>
+                    </label>
+
+                    <label class="client-ticket-field">
                         <span>Descuento</span>
                         <select name="tipo_descuento" required>
                             @foreach ($descuentos as $value => $label)
