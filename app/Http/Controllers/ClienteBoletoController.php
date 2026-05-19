@@ -6,6 +6,7 @@ use App\Models\Asiento;
 use App\Models\Boleto;
 use App\Models\Salida;
 use App\Models\TipoAsiento;
+use App\Services\BoletoNotificationDispatcher;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -84,6 +85,7 @@ class ClienteBoletoController extends Controller
                 return Boleto::create([
                     'salida_id' => $salida->id,
                     'user_id' => auth()->id(),
+                    'cliente_email' => $validated['cliente_email'] ?? auth()->user()?->email,
                     'asiento_id' => $asiento->id,
                     'ciudad_origen_id' => $salida->frecuencia->ciudad_origen_id,
                     'ciudad_destino_id' => $salida->frecuencia->ciudad_destino_id,
@@ -108,6 +110,8 @@ class ClienteBoletoController extends Controller
                 ->withInput()
                 ->withErrors(['asiento_id' => 'El asiento seleccionado ya esta ocupado para esta salida.']);
         }
+
+        app(BoletoNotificationDispatcher::class)->compraRegistrada($boleto);
 
         return redirect()
             ->route('cliente.boletos.show', $boleto)
@@ -139,10 +143,13 @@ class ClienteBoletoController extends Controller
 
     private function validateClienteBoleto(Request $request): array
     {
+        $clienteEmailRules = [auth()->check() ? 'nullable' : 'required', 'email', 'max:255'];
+
         $validator = validator($request->all(), [
             'salida_id' => ['required', 'exists:salidas,id'],
             'tipo_asiento_id' => ['nullable', 'exists:tipo_asientos,id'],
             'asiento_id' => ['required', 'exists:asientos,id'],
+            'cliente_email' => $clienteEmailRules,
             'pasajero_nombre' => ['required', 'string', 'max:255'],
             'pasajero_cedula' => ['required', 'string', 'size:10'],
             'tipo_descuento' => ['required', 'in:ninguno,menor_edad,discapacidad,tercera_edad'],
@@ -200,7 +207,7 @@ class ClienteBoletoController extends Controller
     private function generateCodigo(): string
     {
         do {
-            $codigo = 'BOL-' . now()->format('Ymd') . '-' . Str::upper(Str::random(6));
+            $codigo = 'BOL-'.now()->format('Ymd').'-'.Str::upper(Str::random(6));
         } while (Boleto::where('codigo', $codigo)->exists());
 
         return $codigo;
