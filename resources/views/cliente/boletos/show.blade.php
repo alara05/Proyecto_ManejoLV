@@ -43,6 +43,7 @@
             </div>
 
             <div class="client-ticket-actions client-ticket-actions-single">
+                <a href="{{ route('cliente.boletos.pdf', $boleto) }}">Descargar boleto PDF</a>
                 <a href="{{ route('cliente.pagos.create', $boleto) }}">Subir comprobante</a>
                 <a href="{{ route('cliente.boletos.create') }}">Comprar otro boleto</a>
             </div>

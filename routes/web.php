@@ -5,9 +5,11 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AsientoController;
 use App\Http\Controllers\BusquedaViajeController;
 use App\Http\Controllers\BoletoController;
+use App\Http\Controllers\BoletoPdfController;
 use App\Http\Controllers\BusController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\ClienteBoletoController;
+use App\Http\Controllers\ClienteHistorialBoletoController;
 use App\Http\Controllers\CooperativaController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\ProvinciaController;
@@ -21,6 +23,7 @@ Route::get('/buscar-viajes', BusquedaViajeController::class)->name('viajes.busca
 Route::get('/comprar-boleto', [ClienteBoletoController::class, 'create'])->name('cliente.boletos.create');
 Route::post('/comprar-boleto', [ClienteBoletoController::class, 'store'])->name('cliente.boletos.store');
 Route::get('/comprar-boleto/{boleto}/confirmacion', [ClienteBoletoController::class, 'show'])->name('cliente.boletos.show');
+Route::get('/boletos/{boleto}/pdf', BoletoPdfController::class)->name('cliente.boletos.pdf');
 Route::get('/boletos/{boleto}/pago', [PagoController::class, 'create'])->name('cliente.pagos.create');
 Route::post('/boletos/{boleto}/pago', [PagoController::class, 'store'])->name('cliente.pagos.store');
 
@@ -34,6 +37,7 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::get('/historial-boletos', ClienteHistorialBoletoController::class)->name('cliente.boletos.historial');
     Route::resource('cooperativas', CooperativaController::class);
     Route::resource('provincias', ProvinciaController::class);
     Route::resource('ciudades', CiudadController::class)->parameters(['ciudades' => 'ciudad']);
