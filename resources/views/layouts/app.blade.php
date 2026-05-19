@@ -22,7 +22,9 @@
                     <a href="{{ route('asientos.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Asientos</a>
                     <a href="{{ route('rutas.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Rutas</a>
                     <a href="{{ route('salidas.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Salidas</a>
-                    <a href="{{ route('boletos.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Boletos</a>
+                    @if (in_array(auth()->user()->role, ['admin', 'oficinista'], true))
+                        <a href="{{ route('boletos.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Boletos</a>
+                    @endif
                     <form method="POST" action="{{ route('logout') }}" class="m-0">
                         @csrf
                         <button type="submit" class="rounded bg-slate-900 px-3 py-2 font-semibold text-white hover:bg-slate-700">

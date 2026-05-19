@@ -42,6 +42,16 @@
                 <p class="mt-1 text-slate-900">${{ number_format($boleto->precio, 2) }}</p>
             </div>
             <div>
+                <p class="font-semibold text-slate-500">Descuento</p>
+                <p class="mt-1 text-slate-900">
+                    {{ str_replace('_', ' ', ucfirst($boleto->tipo_descuento)) }} / {{ number_format($boleto->porcentaje_descuento, 0) }}%
+                </p>
+            </div>
+            <div>
+                <p class="font-semibold text-slate-500">Vendido por</p>
+                <p class="mt-1 text-slate-900">{{ $boleto->vendedor->name ?? 'Sin registrar' }}</p>
+            </div>
+            <div>
                 <p class="font-semibold text-slate-500">Estado</p>
                 <p class="mt-1 text-slate-900">{{ ucfirst($boleto->estado) }}</p>
             </div>

@@ -30,7 +30,7 @@ class BoletoSeatSelectionTest extends TestCase
 
     public function test_no_permite_vender_asiento_ocupado_en_la_misma_salida(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => 'oficinista']);
         $cooperativa = Cooperativa::create(['nombre' => 'Cooperativa Central']);
         $provincia = Provincia::create(['nombre' => 'Tungurahua']);
         $origen = Ciudad::create(['provincia_id' => $provincia->id, 'nombre' => 'Ambato']);
@@ -94,6 +94,7 @@ class BoletoSeatSelectionTest extends TestCase
                 'asiento_id' => $asiento->id,
                 'pasajero_nombre' => 'Pasajero Dos',
                 'pasajero_cedula' => '1102030405',
+                'tipo_descuento' => 'ninguno',
             ])
             ->assertSessionHasErrors('asiento_id');
 

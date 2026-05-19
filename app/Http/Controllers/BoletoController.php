@@ -21,11 +21,14 @@ class BoletoController extends Controller
      */
     public function index(): View
     {
+        $this->authorizeOfficeSales();
+
         $boletos = Boleto::with([
             'salida.frecuencia.origen',
             'salida.frecuencia.destino',
             'asiento.tipoAsiento',
             'cliente',
+            'vendedor',
         ])
             ->latest()
             ->paginate(10);
@@ -38,6 +41,8 @@ class BoletoController extends Controller
      */
     public function create(Request $request): View
     {
+        $this->authorizeOfficeSales();
+
         $salida = null;
         $asientos = collect();
         $tiposAsiento = collect();
@@ -78,6 +83,7 @@ class BoletoController extends Controller
             'tiposAsiento' => $tiposAsiento,
             'asientosOcupados' => $asientosOcupados,
             'selectedTipoAsientoId' => $request->input('tipo_asiento_id'),
+            'descuentos' => $this->discountLabels(),
         ]);
     }
 
@@ -86,6 +92,8 @@ class BoletoController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $this->authorizeOfficeSales();
+
         $validated = $this->validateBoleto($request);
 
         try {
@@ -97,18 +105,23 @@ class BoletoController extends Controller
                     return null;
                 }
 
+                $porcentajeDescuento = $this->discountPercentage($validated['tipo_descuento']);
+                $subtotal = (float) $salida->precio_base + (float) ($asiento->tipoAsiento?->recargo ?? 0);
+                $precio = round($subtotal - ($subtotal * ($porcentajeDescuento / 100)), 2);
+
                 return Boleto::create([
                     'salida_id' => $salida->id,
-                    'user_id' => auth()->id(),
+                    'user_id' => null,
+                    'vendido_por' => auth()->id(),
                     'asiento_id' => $asiento->id,
                     'ciudad_origen_id' => $salida->frecuencia->ciudad_origen_id,
                     'ciudad_destino_id' => $salida->frecuencia->ciudad_destino_id,
                     'codigo' => $this->generateCodigo(),
                     'pasajero_nombre' => $validated['pasajero_nombre'],
                     'pasajero_cedula' => $validated['pasajero_cedula'],
-                    'tipo_descuento' => 'ninguno',
-                    'porcentaje_descuento' => 0,
-                    'precio' => (float) $salida->precio_base + (float) ($asiento->tipoAsiento?->recargo ?? 0),
+                    'tipo_descuento' => $validated['tipo_descuento'],
+                    'porcentaje_descuento' => $porcentajeDescuento,
+                    'precio' => $precio,
                     'estado' => 'pagado',
                     'vendido_at' => now(),
                 ]);
@@ -135,12 +148,15 @@ class BoletoController extends Controller
      */
     public function show(Boleto $boleto): View
     {
+        $this->authorizeOfficeSales();
+
         $boleto->load([
             'salida.frecuencia.origen.provincia',
             'salida.frecuencia.destino.provincia',
             'salida.bus',
             'asiento.tipoAsiento',
             'cliente',
+            'vendedor',
         ]);
 
         return view('boletos.show', compact('boleto'));
@@ -163,6 +179,7 @@ class BoletoController extends Controller
             'asiento_id' => ['required', 'exists:asientos,id'],
             'pasajero_nombre' => ['required', 'string', 'max:255'],
             'pasajero_cedula' => ['required', 'string', 'size:10'],
+            'tipo_descuento' => ['required', 'in:ninguno,menor_edad,discapacidad,tercera_edad'],
         ]);
 
         $validator->after(function (Validator $validator) use ($request): void {
@@ -203,5 +220,28 @@ class BoletoController extends Controller
         } while (Boleto::where('codigo', $codigo)->exists());
 
         return $codigo;
+    }
+
+    private function authorizeOfficeSales(): void
+    {
+        abort_unless(in_array(auth()->user()?->role, ['admin', 'oficinista'], true), 403);
+    }
+
+    private function discountLabels(): array
+    {
+        return [
+            'ninguno' => 'Sin descuento',
+            'menor_edad' => 'Menor de edad - 50%',
+            'discapacidad' => 'Discapacidad - 50%',
+            'tercera_edad' => 'Tercera edad - 50%',
+        ];
+    }
+
+    private function discountPercentage(string $tipoDescuento): float
+    {
+        return match ($tipoDescuento) {
+            'menor_edad', 'discapacidad', 'tercera_edad' => 50,
+            default => 0,
+        };
     }
 }
