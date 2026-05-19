@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AsientoController;
 use App\Http\Controllers\BusquedaViajeController;
+use App\Http\Controllers\BoletoController;
 use App\Http\Controllers\BusController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\CooperativaController;
@@ -34,5 +35,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('asientos', AsientoController::class);
     Route::resource('rutas', RutaController::class);
     Route::resource('salidas', SalidaController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
+    Route::resource('boletos', BoletoController::class)->only(['index', 'create', 'store', 'show']);
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
