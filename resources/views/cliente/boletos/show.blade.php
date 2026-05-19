@@ -39,6 +39,7 @@
                 <div>
                     <span>Estado</span>
                     <strong>{{ ucfirst($boleto->estado) }}</strong>
+                    <small>Pago: {{ $boleto->pago ? ucfirst($boleto->pago->estado) : 'Sin comprobante' }}</small>
                 </div>
             </div>
 

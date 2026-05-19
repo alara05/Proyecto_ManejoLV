@@ -37,7 +37,8 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
-    Route::get('/historial-boletos', ClienteHistorialBoletoController::class)->name('cliente.boletos.historial');
+    Route::get('/historial-compras', ClienteHistorialBoletoController::class)->name('cliente.boletos.historial');
+    Route::get('/historial-boletos', ClienteHistorialBoletoController::class)->name('cliente.boletos.historial.legacy');
     Route::resource('cooperativas', CooperativaController::class);
     Route::resource('provincias', ProvinciaController::class);
     Route::resource('ciudades', CiudadController::class)->parameters(['ciudades' => 'ciudad']);

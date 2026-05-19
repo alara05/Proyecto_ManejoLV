@@ -121,6 +121,7 @@ class ClienteBoletoController extends Controller
             'salida.frecuencia.destino.provincia',
             'salida.bus',
             'asiento.tipoAsiento',
+            'pago',
         ]);
 
         return view('cliente.boletos.show', compact('boleto'));

@@ -8,6 +8,7 @@ use App\Models\Bus;
 use App\Models\Ciudad;
 use App\Models\Cooperativa;
 use App\Models\Frecuencia;
+use App\Models\Pago;
 use App\Models\Provincia;
 use App\Models\Salida;
 use App\Models\TipoAsiento;
@@ -41,11 +42,21 @@ class BoletoPdfCodigoTest extends TestCase
     {
         $user = User::factory()->create();
         $boleto = $this->crearBoleto(['user_id' => $user->id]);
+        Pago::create([
+            'boleto_id' => $boleto->id,
+            'metodo' => 'transferencia',
+            'monto' => 8,
+            'comprobante_path' => 'comprobantes/demo.pdf',
+            'estado' => 'pendiente',
+        ]);
 
         $this->actingAs($user)
             ->get(route('cliente.boletos.historial'))
             ->assertOk()
             ->assertSee($boleto->codigo)
+            ->assertSee('Reservado')
+            ->assertSee('Pendiente')
+            ->assertSee('Transferencia')
             ->assertSee('PDF');
     }
 
