@@ -11,6 +11,7 @@ use App\Http\Controllers\BusController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\ClienteBoletoController;
 use App\Http\Controllers\ClienteHistorialBoletoController;
+use App\Http\Controllers\ConfiguracionAplicacionController;
 use App\Http\Controllers\CooperativaController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\ProvinciaController;
@@ -55,5 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('pagos/{pago}/rechazar', [PagoController::class, 'rechazar'])->name('pagos.rechazar');
     Route::get('accesos', [AccesoPasajeroController::class, 'index'])->name('accesos.index');
     Route::post('accesos', [AccesoPasajeroController::class, 'store'])->name('accesos.store');
+    Route::get('configuracion', [ConfiguracionAplicacionController::class, 'edit'])->name('configuracion.edit');
+    Route::put('configuracion', [ConfiguracionAplicacionController::class, 'update'])->name('configuracion.update');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

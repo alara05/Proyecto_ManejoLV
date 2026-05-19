@@ -75,6 +75,14 @@ a {
     box-shadow: 0 12px 30px rgba(36, 168, 255, 0.22);
 }
 
+.brand-logo {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    object-fit: cover;
+    background: #ffffff;
+}
+
 .brand-text {
     font-size: 1.05rem;
 }
