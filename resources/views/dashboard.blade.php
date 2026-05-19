@@ -43,6 +43,11 @@
                     Registrar accesos
                 </a>
             @endif
+            @if (auth()->user()->role === 'admin')
+                <a href="{{ route('configuracion.edit') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                    Configurar aplicacion
+                </a>
+            @endif
         </div>
     </section>
 @endsection
