@@ -9,6 +9,7 @@ use App\Http\Controllers\BusController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\ClienteBoletoController;
 use App\Http\Controllers\CooperativaController;
+use App\Http\Controllers\PagoController;
 use App\Http\Controllers\ProvinciaController;
 use App\Http\Controllers\RutaController;
 use App\Http\Controllers\SalidaController;
@@ -20,6 +21,8 @@ Route::get('/buscar-viajes', BusquedaViajeController::class)->name('viajes.busca
 Route::get('/comprar-boleto', [ClienteBoletoController::class, 'create'])->name('cliente.boletos.create');
 Route::post('/comprar-boleto', [ClienteBoletoController::class, 'store'])->name('cliente.boletos.store');
 Route::get('/comprar-boleto/{boleto}/confirmacion', [ClienteBoletoController::class, 'show'])->name('cliente.boletos.show');
+Route::get('/boletos/{boleto}/pago', [PagoController::class, 'create'])->name('cliente.pagos.create');
+Route::post('/boletos/{boleto}/pago', [PagoController::class, 'store'])->name('cliente.pagos.store');
 
 Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
@@ -40,5 +43,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('rutas', RutaController::class);
     Route::resource('salidas', SalidaController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
     Route::resource('boletos', BoletoController::class)->only(['index', 'create', 'store', 'show']);
+    Route::get('pagos', [PagoController::class, 'index'])->name('pagos.index');
+    Route::get('pagos/{pago}', [PagoController::class, 'show'])->name('pagos.show');
+    Route::patch('pagos/{pago}/validar', [PagoController::class, 'validar'])->name('pagos.validar');
+    Route::patch('pagos/{pago}/rechazar', [PagoController::class, 'rechazar'])->name('pagos.rechazar');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

@@ -24,6 +24,7 @@
                     <a href="{{ route('salidas.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Salidas</a>
                     @if (in_array(auth()->user()->role, ['admin', 'oficinista'], true))
                         <a href="{{ route('boletos.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Boletos</a>
+                        <a href="{{ route('pagos.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Pagos</a>
                     @endif
                     <form method="POST" action="{{ route('logout') }}" class="m-0">
                         @csrf
