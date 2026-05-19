@@ -8,6 +8,7 @@ use App\Models\Salida;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class SalidaController extends Controller
@@ -105,7 +106,7 @@ class SalidaController extends Controller
 
     private function validateSalida(Request $request): array
     {
-        return $request->validate([
+        $validated = $request->validate([
             'frecuencia_id' => [
                 'required',
                 Rule::exists('frecuencias', 'id')->where('activa', true),
@@ -117,5 +118,16 @@ class SalidaController extends Controller
             'fecha' => ['required', 'date', 'after_or_equal:today'],
             'precio_base' => ['required', 'numeric', 'min:0', 'max:999999.99'],
         ]);
+
+        $frecuencia = Frecuencia::find($validated['frecuencia_id']);
+        $bus = Bus::find($validated['bus_id']);
+
+        if ($frecuencia->cooperativa_id !== $bus->cooperativa_id) {
+            throw ValidationException::withMessages([
+                'bus_id' => 'El bus seleccionado debe pertenecer a la misma cooperativa de la frecuencia.',
+            ]);
+        }
+
+        return $validated;
     }
 }
