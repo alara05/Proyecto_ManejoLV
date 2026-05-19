@@ -30,6 +30,9 @@
             <a href="{{ route('salidas.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
                 Gestionar salidas
             </a>
+            <a href="{{ route('boletos.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Vender boletos
+            </a>
         </div>
     </section>
 @endsection
