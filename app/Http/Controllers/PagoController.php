@@ -12,6 +12,8 @@ class PagoController extends Controller
 {
     public function index(): View
     {
+        $this->authorizePaymentValidation();
+
         $pagos = Pago::with([
             'boleto.salida.frecuencia.origen',
             'boleto.salida.frecuencia.destino',
@@ -78,6 +80,8 @@ class PagoController extends Controller
 
     public function show(Pago $pago): View
     {
+        $this->authorizePaymentValidation();
+
         $pago->load([
             'boleto.salida.frecuencia.origen.provincia',
             'boleto.salida.frecuencia.destino.provincia',
@@ -91,7 +95,15 @@ class PagoController extends Controller
 
     public function validar(Pago $pago): RedirectResponse
     {
+        $this->authorizePaymentValidation();
+
         $pago->load('boleto');
+
+        if ($pago->estado !== 'pendiente') {
+            return redirect()
+                ->route('pagos.show', $pago)
+                ->with('error', 'Solo se pueden validar pagos pendientes.');
+        }
 
         $pago->update([
             'estado' => 'validado',
@@ -111,15 +123,30 @@ class PagoController extends Controller
 
     public function rechazar(Request $request, Pago $pago): RedirectResponse
     {
+        $this->authorizePaymentValidation();
+
         $validated = $request->validate([
             'observacion' => ['nullable', 'string', 'max:1000'],
         ]);
+
+        $pago->load('boleto');
+
+        if ($pago->estado !== 'pendiente') {
+            return redirect()
+                ->route('pagos.show', $pago)
+                ->with('error', 'Solo se pueden rechazar pagos pendientes.');
+        }
 
         $pago->update([
             'estado' => 'rechazado',
             'validado_por' => auth()->id(),
             'validado_at' => now(),
             'observacion' => $validated['observacion'] ?? $pago->observacion,
+        ]);
+
+        $pago->boleto->update([
+            'estado' => 'reservado',
+            'vendido_at' => null,
         ]);
 
         return redirect()
@@ -133,5 +160,10 @@ class PagoController extends Controller
             'transferencia' => 'Transferencia bancaria',
             'deposito' => 'Deposito bancario',
         ];
+    }
+
+    private function authorizePaymentValidation(): void
+    {
+        abort_unless(in_array(auth()->user()?->role, ['admin', 'oficinista'], true), 403);
     }
 }
