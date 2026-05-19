@@ -8,6 +8,7 @@ use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\CooperativaController;
 use App\Http\Controllers\ProvinciaController;
 use App\Http\Controllers\RutaController;
+use App\Http\Controllers\SalidaController;
 use App\Http\Controllers\TipoAsientoController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,5 +31,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('tipo-asientos', TipoAsientoController::class);
     Route::resource('asientos', AsientoController::class);
     Route::resource('rutas', RutaController::class);
+    Route::resource('salidas', SalidaController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
