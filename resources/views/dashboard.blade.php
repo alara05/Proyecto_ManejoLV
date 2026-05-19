@@ -38,6 +38,11 @@
                     Validar pagos
                 </a>
             @endif
+            @if (in_array(auth()->user()->role, ['admin', 'personal_bus'], true))
+                <a href="{{ route('accesos.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                    Registrar accesos
+                </a>
+            @endif
         </div>
     </section>
 @endsection

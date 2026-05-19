@@ -26,6 +26,9 @@
                         <a href="{{ route('boletos.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Boletos</a>
                         <a href="{{ route('pagos.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Pagos</a>
                     @endif
+                    @if (in_array(auth()->user()->role, ['admin', 'personal_bus'], true))
+                        <a href="{{ route('accesos.index') }}" class="font-medium text-slate-700 hover:text-slate-950">Accesos</a>
+                    @endif
                     <form method="POST" action="{{ route('logout') }}" class="m-0">
                         @csrf
                         <button type="submit" class="rounded bg-slate-900 px-3 py-2 font-semibold text-white hover:bg-slate-700">
