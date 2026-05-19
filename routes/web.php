@@ -6,6 +6,7 @@ use App\Http\Controllers\AsientoController;
 use App\Http\Controllers\BusController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\CooperativaController;
+use App\Http\Controllers\FrecuenciaController;
 use App\Http\Controllers\ProvinciaController;
 use App\Http\Controllers\RutaController;
 use App\Http\Controllers\TipoAsientoController;
@@ -30,5 +31,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('tipo-asientos', TipoAsientoController::class);
     Route::resource('asientos', AsientoController::class);
     Route::resource('rutas', RutaController::class);
+    Route::resource('frecuencias', FrecuenciaController::class);
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
