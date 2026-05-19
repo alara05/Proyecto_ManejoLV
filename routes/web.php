@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AsientoController;
+use App\Http\Controllers\AccesoPasajeroController;
 use App\Http\Controllers\BusquedaViajeController;
 use App\Http\Controllers\BoletoController;
 use App\Http\Controllers\BoletoPdfController;
@@ -52,5 +53,7 @@ Route::middleware('auth')->group(function () {
     Route::get('pagos/{pago}', [PagoController::class, 'show'])->name('pagos.show');
     Route::patch('pagos/{pago}/validar', [PagoController::class, 'validar'])->name('pagos.validar');
     Route::patch('pagos/{pago}/rechazar', [PagoController::class, 'rechazar'])->name('pagos.rechazar');
+    Route::get('accesos', [AccesoPasajeroController::class, 'index'])->name('accesos.index');
+    Route::post('accesos', [AccesoPasajeroController::class, 'store'])->name('accesos.store');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
