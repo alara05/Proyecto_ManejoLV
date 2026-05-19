@@ -29,6 +29,7 @@
                 <ul class="nav-links">
                     <li><a href="{{ route('inicio') }}#inicio">Inicio</a></li>
                     <li><a href="{{ route('viajes.buscar') }}">Buscar viajes</a></li>
+                    <li><a href="{{ route('cliente.boletos.create') }}">Comprar boleto</a></li>
                     <li><a href="{{ route('inicio') }}#servicios">Servicios</a></li>
                     <li><a href="{{ route('inicio') }}#rutas">Rutas</a></li>
                     <li><a href="{{ route('inicio') }}#beneficios">Beneficios</a></li>
