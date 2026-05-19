@@ -38,6 +38,7 @@
 
                 <div class="nav-actions">
                     @auth
+                        <a class="btn btn-secondary" href="{{ route('cliente.boletos.historial') }}">Historial</a>
                         <a class="btn btn-secondary" href="{{ route('dashboard') }}">Panel</a>
                         <form method="POST" action="{{ route('logout') }}" class="logout-form">
                             @csrf

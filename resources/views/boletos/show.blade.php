@@ -6,9 +6,14 @@
             <p class="text-sm font-medium text-slate-500">Detalle de boleto</p>
             <h1 class="text-2xl font-semibold">{{ $boleto->codigo }}</h1>
         </div>
-        <a href="{{ route('boletos.index') }}" class="rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
-            Volver
-        </a>
+        <div class="flex gap-2">
+            <a href="{{ route('cliente.boletos.pdf', $boleto) }}" class="rounded bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700">
+                Descargar PDF
+            </a>
+            <a href="{{ route('boletos.index') }}" class="rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Volver
+            </a>
+        </div>
     </div>
 
     @include('partials.flash')

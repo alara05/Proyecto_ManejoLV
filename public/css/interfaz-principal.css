@@ -1144,6 +1144,71 @@ a {
     font-weight: 800;
 }
 
+.client-history-list {
+    display: grid;
+    gap: 14px;
+}
+
+.client-history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    background: rgba(3, 7, 14, 0.44);
+}
+
+.client-history-item span,
+.client-history-item strong,
+.client-history-item small {
+    display: block;
+}
+
+.client-history-item span {
+    margin-bottom: 6px;
+    color: var(--accent-hover);
+    font-size: 0.82rem;
+    font-weight: 950;
+    letter-spacing: 0.08em;
+}
+
+.client-history-item strong {
+    color: #ffffff;
+    font-size: 1.05rem;
+}
+
+.client-history-item small {
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-weight: 750;
+}
+
+.client-history-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-width: max-content;
+}
+
+.client-history-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    font-weight: 950;
+}
+
+.client-history-actions a:last-child {
+    background: var(--accent);
+    color: #04111d;
+}
+
 @media (max-width: 1100px) {
     .main-navbar {
         gap: 18px;
@@ -1324,5 +1389,14 @@ a {
 
     .client-seat-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .client-history-item {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .client-history-actions {
+        min-width: 0;
     }
 }
