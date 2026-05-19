@@ -879,6 +879,18 @@ a {
     color: #ffffff;
 }
 
+.travel-card-action {
+    display: inline-flex;
+    justify-content: center;
+    min-height: 42px;
+    margin-top: 18px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: var(--accent);
+    color: #04111d;
+    font-weight: 950;
+}
+
 .travel-empty-state {
     grid-column: 1 / -1;
     padding: 34px;
@@ -893,6 +905,243 @@ a {
 .travel-pagination {
     margin-top: 24px;
     color: #ffffff;
+}
+
+.client-ticket-page {
+    min-height: calc(100vh - var(--header-height));
+    padding: 58px 30px 86px;
+    background:
+        linear-gradient(135deg, rgba(236, 117, 25, 0.14), transparent 32%),
+        linear-gradient(180deg, #090d15 0%, #05070b 100%);
+}
+
+.client-ticket-shell {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+}
+
+.client-ticket-heading {
+    margin-bottom: 26px;
+}
+
+.client-ticket-heading span {
+    display: inline-flex;
+    margin-bottom: 12px;
+    color: var(--accent-hover);
+    font-weight: 950;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.client-ticket-heading h1 {
+    margin: 0;
+    max-width: 760px;
+    font-size: clamp(2.2rem, 5vw, 4.4rem);
+    line-height: 1.02;
+}
+
+.client-ticket-panel,
+.client-alert {
+    margin-bottom: 22px;
+    padding: 22px;
+    border: 1px solid var(--line-soft);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: var(--shadow);
+}
+
+.client-alert {
+    color: #ffffff;
+}
+
+.client-alert ul {
+    margin: 10px 0 0;
+    padding-left: 20px;
+}
+
+.client-alert-error {
+    border-color: rgba(255, 100, 100, 0.35);
+    background: rgba(160, 28, 28, 0.24);
+}
+
+.client-alert-success {
+    border-color: rgba(88, 214, 141, 0.35);
+    background: rgba(20, 120, 80, 0.24);
+    font-weight: 850;
+}
+
+.client-ticket-grid,
+.client-trip-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    align-items: end;
+}
+
+.client-ticket-wide {
+    grid-column: span 2;
+}
+
+.client-ticket-field span,
+.client-trip-summary span {
+    display: block;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.76);
+    font-size: 0.82rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.client-ticket-field input,
+.client-ticket-field select {
+    width: 100%;
+    min-height: 48px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 10px;
+    background: rgba(3, 7, 14, 0.74);
+    color: #ffffff;
+    font: inherit;
+    font-weight: 700;
+    padding: 0 12px;
+    outline: none;
+}
+
+.client-ticket-field input:focus,
+.client-ticket-field select:focus {
+    border-color: var(--accent-hover);
+    box-shadow: 0 0 0 4px rgba(36, 168, 255, 0.16);
+}
+
+.client-ticket-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.client-ticket-actions-single {
+    grid-template-columns: minmax(220px, 320px);
+    margin-top: 22px;
+}
+
+.client-ticket-actions button,
+.client-ticket-actions a {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.client-ticket-actions button {
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: #04111d;
+}
+
+.client-ticket-actions a {
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.client-trip-summary {
+    align-items: stretch;
+    margin-bottom: 24px;
+}
+
+.client-trip-summary div {
+    min-height: 96px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    background: rgba(3, 7, 14, 0.44);
+}
+
+.client-trip-summary strong {
+    display: block;
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+.client-trip-summary small {
+    display: block;
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-weight: 750;
+}
+
+.client-seat-section h2 {
+    margin: 0 0 14px;
+    font-size: 1.35rem;
+}
+
+.client-seat-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.client-seat-option {
+    min-height: 108px;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+}
+
+.client-seat-option:has(input:checked) {
+    border-color: var(--accent-hover);
+    background: rgba(36, 168, 255, 0.18);
+}
+
+.client-seat-option.is-busy {
+    border-color: rgba(255, 100, 100, 0.28);
+    background: rgba(160, 28, 28, 0.18);
+    color: rgba(255, 255, 255, 0.72);
+    cursor: not-allowed;
+}
+
+.client-seat-option input {
+    margin-right: 8px;
+}
+
+.client-seat-option strong,
+.client-seat-option span,
+.client-seat-option small {
+    display: block;
+}
+
+.client-seat-option strong {
+    margin-top: 8px;
+    font-size: 1.2rem;
+}
+
+.client-seat-option span {
+    margin-top: 4px;
+    color: var(--text-muted);
+    font-weight: 800;
+}
+
+.client-seat-option small {
+    margin-top: 6px;
+    color: rgba(255, 255, 255, 0.76);
+    font-weight: 800;
+}
+
+.client-empty-message {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 18px;
+    border: 1px solid rgba(255, 214, 102, 0.3);
+    border-radius: 14px;
+    background: rgba(140, 96, 20, 0.18);
+    color: #ffe5a8;
+    font-weight: 800;
 }
 
 @media (max-width: 1100px) {
@@ -980,8 +1229,14 @@ a {
     }
 
     .travel-filter-grid,
-    .travel-results-grid {
+    .travel-results-grid,
+    .client-ticket-grid,
+    .client-trip-summary {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .client-seat-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
     .auth-visual {
@@ -1052,7 +1307,22 @@ a {
     .travel-filter-grid,
     .travel-results-grid,
     .travel-details,
-    .travel-filter-actions {
+    .travel-filter-actions,
+    .client-ticket-grid,
+    .client-trip-summary,
+    .client-ticket-actions {
         grid-template-columns: 1fr;
+    }
+
+    .client-ticket-page {
+        padding: 36px 18px 64px;
+    }
+
+    .client-ticket-wide {
+        grid-column: auto;
+    }
+
+    .client-seat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }

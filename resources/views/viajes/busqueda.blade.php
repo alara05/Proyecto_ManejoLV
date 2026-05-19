@@ -159,6 +159,8 @@
                             <span>Sin frecuencias</span>
                         @endforelse
                     </div>
+
+                    <a class="travel-card-action" href="{{ route('cliente.boletos.create') }}">Comprar boleto</a>
                 </article>
             @empty
                 <div class="travel-empty-state">

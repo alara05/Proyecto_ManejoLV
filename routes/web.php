@@ -7,6 +7,7 @@ use App\Http\Controllers\BusquedaViajeController;
 use App\Http\Controllers\BoletoController;
 use App\Http\Controllers\BusController;
 use App\Http\Controllers\CiudadController;
+use App\Http\Controllers\ClienteBoletoController;
 use App\Http\Controllers\CooperativaController;
 use App\Http\Controllers\ProvinciaController;
 use App\Http\Controllers\RutaController;
@@ -16,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('inicio');
 Route::get('/buscar-viajes', BusquedaViajeController::class)->name('viajes.buscar');
+Route::get('/comprar-boleto', [ClienteBoletoController::class, 'create'])->name('cliente.boletos.create');
+Route::post('/comprar-boleto', [ClienteBoletoController::class, 'store'])->name('cliente.boletos.store');
+Route::get('/comprar-boleto/{boleto}/confirmacion', [ClienteBoletoController::class, 'show'])->name('cliente.boletos.show');
 
 Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
