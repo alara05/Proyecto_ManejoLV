@@ -23,7 +23,7 @@
                 <span class="hero-kicker">Rutas y cooperativas</span>
                 <h2>Encuentra tu viaje</h2>
                 <p>Organiza la informacion principal de ciudades, frecuencias, buses y cooperativas.</p>
-                <a href="#rutas" class="hero-link">Ver estructura</a>
+                <a href="{{ route('viajes.buscar') }}" class="hero-link">Buscar viajes</a>
             </div>
         </article>
 

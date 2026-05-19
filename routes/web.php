@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AsientoController;
+use App\Http\Controllers\BusquedaViajeController;
 use App\Http\Controllers\BusController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\CooperativaController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\TipoAsientoController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('inicio');
+Route::get('/buscar-viajes', BusquedaViajeController::class)->name('viajes.buscar');
 
 Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
