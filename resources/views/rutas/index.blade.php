@@ -34,7 +34,7 @@
                             <td class="px-4 py-3">{{ $ruta->cooperativa->nombre }}</td>
                             <td class="px-4 py-3">
                                 <p>{{ $ruta->origen->nombre }}</p>
-                                <p class="text-xs text-slate-500">a {{ $ruta->destino->nombre }}</p>
+                                <p class="text-xs text-slate-500">{{ $ruta->origen->provincia->nombre }} a {{ $ruta->destino->nombre }}, {{ $ruta->destino->provincia->nombre }}</p>
                             </td>
                             <td class="px-4 py-3">
                                 {{ $ruta->bus ? 'Bus ' . $ruta->bus->numero . ' - ' . $ruta->bus->placa : 'Sin asignar' }}

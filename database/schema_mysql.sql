@@ -20,6 +20,7 @@ DROP TABLE IF EXISTS configuracion_aplicacion;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS cooperativas;
 DROP TABLE IF EXISTS ciudades;
+DROP TABLE IF EXISTS provincias;
 DROP TABLE IF EXISTS sessions;
 DROP TABLE IF EXISTS password_reset_tokens;
 DROP TABLE IF EXISTS cache_locks;
@@ -44,14 +45,26 @@ CREATE TABLE cooperativas (
   updated_at TIMESTAMP NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE provincias (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(255) NOT NULL UNIQUE,
+  activa TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NULL DEFAULT NULL,
+  updated_at TIMESTAMP NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE ciudades (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  provincia_id BIGINT UNSIGNED NOT NULL,
   nombre VARCHAR(255) NOT NULL,
-  provincia VARCHAR(255) NOT NULL,
   activa TINYINT(1) NOT NULL DEFAULT 1,
   created_at TIMESTAMP NULL DEFAULT NULL,
   updated_at TIMESTAMP NULL DEFAULT NULL,
-  UNIQUE KEY ciudades_nombre_provincia_unique (nombre, provincia)
+  UNIQUE KEY ciudades_nombre_provincia_id_unique (nombre, provincia_id),
+  KEY ciudades_provincia_id_index (provincia_id),
+  CONSTRAINT ciudades_provincia_id_foreign
+    FOREIGN KEY (provincia_id) REFERENCES provincias(id)
+    ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE users (

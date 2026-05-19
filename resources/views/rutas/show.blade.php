@@ -38,11 +38,11 @@
         </div>
         <div>
             <p class="font-semibold text-slate-500">Ciudad origen</p>
-            <p class="mt-1 text-slate-900">{{ $ruta->origen->nombre }} - {{ $ruta->origen->provincia }}</p>
+            <p class="mt-1 text-slate-900">{{ $ruta->origen->nombre }} - {{ $ruta->origen->provincia->nombre }}</p>
         </div>
         <div>
             <p class="font-semibold text-slate-500">Ciudad destino</p>
-            <p class="mt-1 text-slate-900">{{ $ruta->destino->nombre }} - {{ $ruta->destino->provincia }}</p>
+            <p class="mt-1 text-slate-900">{{ $ruta->destino->nombre }} - {{ $ruta->destino->provincia->nombre }}</p>
         </div>
         <div>
             <p class="font-semibold text-slate-500">Tipo de viaje</p>

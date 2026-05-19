@@ -18,7 +18,7 @@ class RutaController extends Controller
      */
     public function index(): View
     {
-        $rutas = Ruta::with(['cooperativa', 'bus', 'origen', 'destino'])
+        $rutas = Ruta::with(['cooperativa', 'bus', 'origen.provincia', 'destino.provincia'])
             ->latest()
             ->paginate(10);
 
@@ -50,7 +50,7 @@ class RutaController extends Controller
      */
     public function show(Ruta $ruta): View
     {
-        $ruta->load(['cooperativa', 'bus', 'origen', 'destino']);
+        $ruta->load(['cooperativa', 'bus', 'origen.provincia', 'destino.provincia']);
 
         return view('rutas.show', compact('ruta'));
     }
@@ -92,7 +92,7 @@ class RutaController extends Controller
         return [
             'cooperativas' => Cooperativa::where('activa', true)->orderBy('nombre')->get(),
             'buses' => Bus::where('activo', true)->with('cooperativa')->orderBy('numero')->get(),
-            'ciudades' => Ciudad::where('activa', true)->orderBy('nombre')->get(),
+            'ciudades' => Ciudad::where('activa', true)->with('provincia')->orderBy('nombre')->get(),
         ];
     }
 

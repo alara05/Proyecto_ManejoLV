@@ -9,6 +9,12 @@
             <a href="{{ route('cooperativas.index') }}" class="inline-flex rounded bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700">
                 Gestionar cooperativas
             </a>
+            <a href="{{ route('provincias.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Gestionar provincias
+            </a>
+            <a href="{{ route('ciudades.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Gestionar ciudades
+            </a>
             <a href="{{ route('buses.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
                 Gestionar buses
             </a>
