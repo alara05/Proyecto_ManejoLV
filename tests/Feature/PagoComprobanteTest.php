@@ -39,7 +39,7 @@ class PagoComprobanteTest extends TestCase
         $this->post(route('cliente.pagos.store', $boleto), [
             'metodo' => 'transferencia',
             'monto' => 12,
-            'comprobante' => UploadedFile::fake()->image('comprobante.jpg'),
+            'comprobante' => UploadedFile::fake()->create('comprobante.pdf', 100, 'application/pdf'),
             'observacion' => 'Operacion 123',
         ])->assertRedirect(route('cliente.pagos.create', $boleto));
 
@@ -53,7 +53,7 @@ class PagoComprobanteTest extends TestCase
 
     public function test_pago_pendiente_puede_validarse_manualmente(): void
     {
-        $validador = User::factory()->create();
+        $validador = User::factory()->create(['role' => 'oficinista']);
         $boleto = $this->crearBoletoReservado();
         $pago = Pago::create([
             'boleto_id' => $boleto->id,
@@ -77,6 +77,54 @@ class PagoComprobanteTest extends TestCase
             'id' => $boleto->id,
             'estado' => 'pagado',
         ]);
+    }
+
+    public function test_pago_pendiente_puede_rechazarse_manualmente(): void
+    {
+        $validador = User::factory()->create(['role' => 'oficinista']);
+        $boleto = $this->crearBoletoReservado();
+        $pago = Pago::create([
+            'boleto_id' => $boleto->id,
+            'metodo' => 'transferencia',
+            'monto' => 12,
+            'comprobante_path' => 'comprobantes/demo.pdf',
+            'estado' => 'pendiente',
+        ]);
+
+        $this->actingAs($validador)
+            ->patch(route('pagos.rechazar', $pago), [
+                'observacion' => 'Comprobante no coincide con el monto.',
+            ])
+            ->assertRedirect(route('pagos.show', $pago));
+
+        $this->assertDatabaseHas('pagos', [
+            'id' => $pago->id,
+            'estado' => 'rechazado',
+            'validado_por' => $validador->id,
+            'observacion' => 'Comprobante no coincide con el monto.',
+        ]);
+
+        $this->assertDatabaseHas('boletos', [
+            'id' => $boleto->id,
+            'estado' => 'reservado',
+        ]);
+    }
+
+    public function test_cliente_no_puede_validar_pagos(): void
+    {
+        $cliente = User::factory()->create(['role' => 'cliente']);
+        $boleto = $this->crearBoletoReservado();
+        $pago = Pago::create([
+            'boleto_id' => $boleto->id,
+            'metodo' => 'deposito',
+            'monto' => 12,
+            'comprobante_path' => 'comprobantes/demo.pdf',
+            'estado' => 'pendiente',
+        ]);
+
+        $this->actingAs($cliente)
+            ->patch(route('pagos.validar', $pago))
+            ->assertForbidden();
     }
 
     private function crearBoletoReservado(): Boleto
