@@ -13,6 +13,7 @@
                 <span class="hero-kicker">Sistema de pasajes</span>
                 <h1>Gestiona tus boletos</h1>
                 <p>Consulta rutas, salidas y disponibilidad desde una interfaz rapida, moderna y facil de usar.</p>
+                <a href="{{ url('/register') }}" class="hero-link">Crear cuenta</a>
             </div>
         </article>
 
@@ -22,6 +23,7 @@
                 <span class="hero-kicker">Rutas y cooperativas</span>
                 <h2>Encuentra tu viaje</h2>
                 <p>Organiza la informacion principal de ciudades, frecuencias, buses y cooperativas.</p>
+                <a href="{{ route('viajes.buscar') }}" class="hero-link">Buscar viajes</a>
             </div>
         </article>
 
@@ -31,6 +33,7 @@
                 <span class="hero-kicker">Panel seguro</span>
                 <h2>Administra el sistema</h2>
                 <p>Accede con tus credenciales para controlar usuarios, ventas, buses, asientos y reportes.</p>
+                <a href="{{ url('/login') }}" class="hero-link">Iniciar sesion</a>
             </div>
         </article>
     </div>
@@ -48,14 +51,14 @@
     <div class="feature-grid">
         <article class="feature-card">
             <div class="feature-icon">01</div>
-            <h3>Entrada limpia</h3>
-            <p>El inicio queda como portada publica con marca, registro e inicio de sesion.</p>
+            <h3>Acceso rapido</h3>
+            <p>Botones visibles para registrarse e iniciar sesion desde la parte superior derecha.</p>
         </article>
 
         <article class="feature-card" id="rutas">
             <div class="feature-icon">02</div>
-            <h3>Flujo centralizado</h3>
-            <p>Los accesos de trabajo aparecen dentro del dashboard despues de iniciar sesion.</p>
+            <h3>Navegacion clara</h3>
+            <p>Menu principal listo para conectar futuras secciones como rutas, boletos, cooperativas y ayuda.</p>
         </article>
 
         <article class="feature-card" id="beneficios">

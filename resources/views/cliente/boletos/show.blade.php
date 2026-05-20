@@ -9,17 +9,9 @@
             <div class="client-alert client-alert-success">{{ session('success') }}</div>
         @endif
 
-        <div class="interface-hero interface-hero-tickets" style="--page-image: url('{{ asset('images/inicio/panel-boletos.jpg') }}')">
-            <div class="interface-hero-copy">
-                <span class="hero-kicker">Confirmacion</span>
-                <h1>Boleto {{ $boleto->codigo }}</h1>
-                <p>Revisa el estado del viaje, completa el pago y descarga el boleto cuando este emitido.</p>
-            </div>
-            <div class="interface-hero-panel">
-                <span>Estado</span>
-                <strong>{{ ucfirst($boleto->estado) }}</strong>
-                <small>Pago: {{ $boleto->pago ? ucfirst($boleto->pago->estado) : 'sin comprobante' }}</small>
-            </div>
+        <div class="client-ticket-heading">
+            <span>Confirmacion</span>
+            <h1>Boleto {{ $boleto->codigo }}</h1>
         </div>
 
         <section class="client-ticket-panel">

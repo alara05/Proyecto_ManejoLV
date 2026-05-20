@@ -6,7 +6,7 @@ use App\Models\Pago;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
-class PagoValidadoNotification extends Notification
+class PagoRechazadoNotification extends Notification
 {
     use Queueable;
 
@@ -22,12 +22,12 @@ class PagoValidadoNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'tipo' => 'pago_validado',
-            'titulo' => 'Pago validado',
-            'mensaje' => 'El pago del boleto ' . $this->pago->boleto->codigo . ' fue validado. Ya puedes descargar tu boleto.',
+            'tipo' => 'pago_rechazado',
+            'titulo' => 'Pago rechazado',
+            'mensaje' => 'El pago del boleto ' . $this->pago->boleto->codigo . ' fue rechazado. Revisa la observacion y carga un nuevo comprobante.',
             'boleto_id' => $this->pago->boleto_id,
             'pago_id' => $this->pago->id,
-            'url' => route('cliente.boletos.show', $this->pago->boleto),
+            'url' => route('cliente.pagos.create', $this->pago->boleto),
         ];
     }
 }

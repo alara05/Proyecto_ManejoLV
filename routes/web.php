@@ -13,6 +13,7 @@ use App\Http\Controllers\ClienteBoletoController;
 use App\Http\Controllers\ClienteHistorialBoletoController;
 use App\Http\Controllers\ConfiguracionAplicacionController;
 use App\Http\Controllers\CooperativaController;
+use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\ProvinciaController;
 use App\Http\Controllers\RutaController;
@@ -41,6 +42,9 @@ Route::middleware('auth')->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
     Route::get('/historial-compras', ClienteHistorialBoletoController::class)->name('cliente.boletos.historial');
     Route::get('/historial-boletos', ClienteHistorialBoletoController::class)->name('cliente.boletos.historial.legacy');
+    Route::get('/notificaciones', [NotificacionController::class, 'index'])->name('notificaciones.index');
+    Route::get('/notificaciones/pdf', [NotificacionController::class, 'exportarPdf'])->name('notificaciones.pdf');
+    Route::patch('/notificaciones/{notificacion}/leer', [NotificacionController::class, 'marcarLeida'])->name('notificaciones.leer');
     Route::resource('cooperativas', CooperativaController::class);
     Route::resource('provincias', ProvinciaController::class);
     Route::resource('ciudades', CiudadController::class)->parameters(['ciudades' => 'ciudad']);
