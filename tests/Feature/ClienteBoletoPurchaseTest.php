@@ -73,10 +73,16 @@ class ClienteBoletoPurchaseTest extends TestCase
             'salida_id' => $salida->id,
             'tipo_asiento_id' => $tipoAsiento->id,
             'asiento_id' => $asiento->id,
+            'cliente_email' => 'cliente.final@example.com',
             'pasajero_nombre' => 'Cliente Final',
             'pasajero_cedula' => '1712345678',
             'tipo_descuento' => 'tercera_edad',
-        ])->assertRedirect();
+            'metodo_pago' => 'transferencia',
+            'comprobante_tipo' => 'ticket',
+            'transferencia_banco' => 'Banco Pichincha',
+            'transferencia_referencia' => 'TRX-001',
+            'transferencia_titular' => 'Cliente Final',
+        ])->assertSessionHasNoErrors()->assertRedirect();
 
         $this->assertDatabaseHas('boletos', [
             'salida_id' => $salida->id,
@@ -88,7 +94,7 @@ class ClienteBoletoPurchaseTest extends TestCase
             'tipo_descuento' => 'tercera_edad',
             'porcentaje_descuento' => 50,
             'precio' => 6,
-            'estado' => 'reservado',
+            'estado' => 'pagado',
         ]);
 
         $this->assertSame(1, Boleto::count());

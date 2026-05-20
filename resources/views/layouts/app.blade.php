@@ -42,6 +42,7 @@
                     @auth
                         @php
                             $canSellTickets = in_array(auth()->user()?->role, ['admin', 'oficinista'], true);
+                            $notificacionesPendientes = auth()->user()->unreadNotifications()->count();
 
                             $navItems = [
                                 [
@@ -60,6 +61,11 @@
                                     'label' => 'Historial',
                                     'route' => route('cliente.boletos.historial'),
                                     'active' => request()->routeIs('cliente.boletos.historial', 'cliente.boletos.historial.legacy'),
+                                ],
+                                [
+                                    'label' => 'Notificaciones'.($notificacionesPendientes > 0 ? ' ('.$notificacionesPendientes.')' : ''),
+                                    'route' => route('notificaciones.index'),
+                                    'active' => request()->routeIs('notificaciones.*'),
                                 ],
                                 [
                                     'label' => 'Cooperativas',

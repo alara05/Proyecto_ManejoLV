@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
     {
         $now = now();
 
+        $this->call(AdminUserSeeder::class);
+
         /*
          |--------------------------------------------------------------------------
          | Usuario administrador unico para pruebas

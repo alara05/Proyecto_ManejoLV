@@ -38,6 +38,7 @@ class PagoPendienteNotification extends Notification
             'codigo' => $this->pago->boleto->codigo,
             'estado' => $this->pago->estado,
             'mensaje' => 'Pago pendiente de validacion.',
+            'url' => route('cliente.pagos.create', $this->pago->boleto),
         ];
     }
 }

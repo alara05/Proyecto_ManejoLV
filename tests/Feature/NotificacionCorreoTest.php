@@ -52,10 +52,28 @@ class NotificacionCorreoTest extends TestCase
                 'pasajero_cedula' => '1712345678',
                 'cliente_email' => $cliente->email,
                 'tipo_descuento' => 'ninguno',
+                'metodo_pago' => 'transferencia',
+                'comprobante_tipo' => 'ticket',
+                'transferencia_banco' => 'Banco Pichincha',
+                'transferencia_referencia' => 'TRX-002',
+                'transferencia_titular' => 'Cliente Notificado',
             ])
             ->assertRedirect();
 
         Notification::assertSentTo($cliente, CompraRegistradaNotification::class);
+    }
+
+    public function test_cliente_puede_descargar_notificaciones_en_pdf(): void
+    {
+        $cliente = User::factory()->create(['role' => 'cliente']);
+        $boleto = $this->crearBoletoReservado($cliente);
+
+        $cliente->notify(new CompraRegistradaNotification($boleto));
+
+        $this->actingAs($cliente)
+            ->get(route('notificaciones.pdf'))
+            ->assertOk()
+            ->assertHeader('Content-Type', 'application/pdf');
     }
 
     public function test_pago_pendiente_validado_y_boleto_emitido_notifican(): void

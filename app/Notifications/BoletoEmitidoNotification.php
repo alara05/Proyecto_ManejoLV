@@ -33,6 +33,7 @@ class BoletoEmitidoNotification extends Notification
             'codigo' => $this->boleto->codigo,
             'estado' => $this->boleto->estado,
             'mensaje' => 'Boleto emitido y disponible para descarga.',
+            'url' => route('cliente.boletos.pdf', $this->boleto),
         ];
     }
 }

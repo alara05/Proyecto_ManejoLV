@@ -37,6 +37,7 @@ class PagoValidadoNotification extends Notification
             'codigo' => $this->pago->boleto->codigo,
             'estado' => $this->pago->estado,
             'mensaje' => 'Pago validado correctamente.',
+            'url' => route('cliente.boletos.show', $this->pago->boleto),
         ];
     }
 }
