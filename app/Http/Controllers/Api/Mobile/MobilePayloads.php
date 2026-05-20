@@ -80,8 +80,12 @@ trait MobilePayloads
                 'status' => $boleto->pago->estado,
                 'receipt_url' => $boleto->pago->comprobante_path ? asset('storage/'.$boleto->pago->comprobante_path) : null,
             ] : null,
-            'qr_value' => route('cliente.boletos.show', $boleto),
-            'pdf_url' => route('cliente.boletos.pdf', $boleto),
+            'qr_value' => $boleto->estado === 'pagado' && $boleto->pago?->estado === 'validado'
+                ? route('cliente.boletos.show', $boleto)
+                : null,
+            'pdf_url' => $boleto->estado === 'pagado' && $boleto->pago?->estado === 'validado'
+                ? route('cliente.boletos.pdf', $boleto)
+                : null,
         ];
     }
 }

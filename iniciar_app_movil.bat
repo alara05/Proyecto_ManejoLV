@@ -72,7 +72,13 @@ if errorlevel 1 (
 
 echo.
 echo Iniciando Laravel en una ventana aparte...
-start "Cuchao Laravel API" cmd /k "cd /d ^"%~dp0^" && php artisan serve --host=0.0.0.0 --port=%APP_PORT%"
+set "LARAVEL_RUNNER=%TEMP%\cuchao_laravel_api_%APP_PORT%.bat"
+(
+    echo @echo off
+    echo cd /d "%~dp0"
+    echo php artisan serve --host=0.0.0.0 --port=%APP_PORT%
+) > "%LARAVEL_RUNNER%"
+start "Cuchao Laravel API :%APP_PORT%" cmd /k "%LARAVEL_RUNNER%"
 
 echo Esperando a que Laravel inicie...
 timeout /t 3 /nobreak >nul

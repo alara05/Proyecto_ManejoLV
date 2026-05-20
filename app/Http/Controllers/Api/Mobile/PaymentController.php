@@ -38,7 +38,7 @@ class PaymentController extends Controller
             ]
         );
 
-        $boleto->forceFill(['estado' => 'pendiente'])->save();
+        $boleto->forceFill(['estado' => 'reservado'])->save();
 
         return response()->json(['data' => $this->ticketPayload($boleto->refresh())]);
     }

@@ -43,6 +43,7 @@ class TicketController extends Controller
         $validated = $request->validate([
             'salida_id' => ['required', 'exists:salidas,id'],
             'asiento_id' => ['required', 'exists:asientos,id'],
+            'asiento_numero' => ['nullable', 'string', 'max:20'],
             'pasajero_nombre' => ['required', 'string', 'max:255'],
             'pasajero_cedula' => ['required', 'string', 'size:10'],
             'tipo_descuento' => ['nullable', 'in:ninguno,menor_edad,discapacidad,tercera_edad'],
@@ -51,12 +52,29 @@ class TicketController extends Controller
 
         try {
             $boleto = DB::transaction(function () use ($validated, $request): Boleto {
-                $salida = Salida::with('frecuencia')->lockForUpdate()->findOrFail($validated['salida_id']);
-                $asiento = Asiento::with('tipoAsiento')->lockForUpdate()->findOrFail($validated['asiento_id']);
+                $salida = Salida::with([
+                    'frecuencia',
+                    'bus.asientos.tipoAsiento',
+                    'boletos',
+                ])->lockForUpdate()->findOrFail($validated['salida_id']);
+
+                $asientoQuery = Asiento::with('tipoAsiento')->where('bus_id', $salida->bus_id);
+                if (! empty($validated['asiento_numero'])) {
+                    $asientoQuery->where('numero', $validated['asiento_numero']);
+                } else {
+                    $asientoQuery->where('id', $validated['asiento_id']);
+                }
+
+                $asiento = $asientoQuery->lockForUpdate()->firstOrFail();
 
                 abort_unless($salida->estado === 'programada', 422, 'La salida no esta disponible.');
                 abort_unless((int) $asiento->bus_id === (int) $salida->bus_id && $asiento->activo, 422, 'El asiento no pertenece a esta salida.');
-                abort_if(Boleto::where('salida_id', $salida->id)->where('asiento_id', $asiento->id)->exists(), 422, 'El asiento ya esta ocupado.');
+                if (Boleto::where('salida_id', $salida->id)->where('asiento_id', $asiento->id)->exists()) {
+                    abort(response()->json([
+                        'message' => 'El asiento '.$asiento->numero.' ya esta ocupado. Vuelve a seleccionar un asiento libre.',
+                        'travel' => $this->travelPayload($salida->refresh()),
+                    ], 422));
+                }
 
                 $porcentajeDescuento = $this->discountPercentage($validated['tipo_descuento'] ?? 'ninguno');
                 $subtotal = (float) $salida->precio_base + (float) ($asiento->tipoAsiento?->recargo ?? 0);
@@ -76,7 +94,7 @@ class TicketController extends Controller
                     'tipo_descuento' => $validated['tipo_descuento'] ?? 'ninguno',
                     'porcentaje_descuento' => $porcentajeDescuento,
                     'precio' => $precio,
-                    'estado' => 'pendiente',
+                    'estado' => 'reservado',
                     'vendido_at' => now(),
                 ]);
 
@@ -92,8 +110,10 @@ class TicketController extends Controller
 
                 return $boleto;
             });
-        } catch (QueryException) {
-            return response()->json(['message' => 'El asiento ya esta ocupado.'], 422);
+        } catch (QueryException $exception) {
+            return response()->json([
+                'message' => 'No se pudo reservar el boleto. Actualiza los asientos e intenta nuevamente.',
+            ], 422);
         }
 
         return response()->json(['data' => $this->ticketPayload($boleto)], 201);
