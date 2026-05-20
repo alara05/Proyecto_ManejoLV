@@ -12,6 +12,7 @@ class Boleto extends Model
     protected $fillable = [
         'salida_id',
         'user_id',
+        'cliente_email',
         'vendido_por',
         'asiento_id',
         'ciudad_origen_id',

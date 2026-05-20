@@ -5,9 +5,17 @@
 @section('content')
 <section class="client-ticket-page">
     <div class="client-ticket-shell">
-        <div class="client-ticket-heading">
-            <span>Historial de compras</span>
-            <h1>Mis boletos</h1>
+        <div class="interface-hero interface-hero-history" style="--page-image: url('{{ asset('images/inicio/panel-control.jpg') }}')">
+            <div class="interface-hero-copy">
+                <span class="hero-kicker">Historial de compras</span>
+                <h1>Mis boletos</h1>
+                <p>Consulta tus compras, estados de pago y boletos descargables desde una vista clara y conectada al inicio.</p>
+            </div>
+            <div class="interface-hero-panel">
+                <span>Compras</span>
+                <strong>{{ $boletos->total() }}</strong>
+                <small>boleto{{ $boletos->total() === 1 ? '' : 's' }} registrado{{ $boletos->total() === 1 ? '' : 's' }}</small>
+            </div>
         </div>
 
         <section class="client-ticket-panel">
