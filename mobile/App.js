@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useMemo, useState } from 'react';
+import QRCode from 'react-native-qrcode-svg';
 import {
   ActivityIndicator,
   Alert,
@@ -15,15 +16,15 @@ import {
   View,
 } from 'react-native';
 
-const API_BASE_URL = 'http://192.168.0.100:8010/api/mobile';
+const API_BASE_URL = 'http://192.168.2.23:8010/api/mobile';
 
 const logo = require('./assets/logo-header.png');
 const poster = require('./assets/appmovil.png');
 
 const demoTravels = [
-  { id: 1, origin: 'Ciudad A', destination: 'Ciudad B', date_label: '24/05/2024', time: '08:30', price: 15, seats: sampleSeats() },
-  { id: 2, origin: 'Ciudad A', destination: 'Ciudad C', date_label: '24/05/2024', time: '10:30', price: 15, seats: sampleSeats() },
-  { id: 3, origin: 'Ciudad A', destination: 'Ciudad D', date_label: '24/05/2024', time: '13:00', price: 15, seats: sampleSeats() },
+  { id: 'demo-1', demo: true, origin: 'Ciudad A', destination: 'Ciudad B', date_label: '24/05/2024', time: '08:30', price: 15, seats: sampleSeats() },
+  { id: 'demo-2', demo: true, origin: 'Ciudad A', destination: 'Ciudad C', date_label: '24/05/2024', time: '10:30', price: 15, seats: sampleSeats() },
+  { id: 'demo-3', demo: true, origin: 'Ciudad A', destination: 'Ciudad D', date_label: '24/05/2024', time: '13:00', price: 15, seats: sampleSeats() },
 ];
 
 function sampleSeats() {
@@ -135,7 +136,11 @@ function createApi(token) {
     });
 
     const body = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(body.message || 'No se pudo conectar con el servidor.');
+    if (!response.ok) {
+      const error = new Error(body.message || 'No se pudo conectar con el servidor.');
+      error.data = body;
+      throw error;
+    }
     return body;
   }
 
@@ -238,21 +243,61 @@ function HomeScreen({ travels, user, onTab }) {
 }
 
 function BuyScreen({ api, travels, user, onBought }) {
-  const [selected, setSelected] = useState(travels[0]);
+  const [selectedId, setSelectedId] = useState(travels[0]?.id);
   const [seat, setSeat] = useState(null);
   const [busy, setBusy] = useState(false);
-  const availableSeats = (selected?.seats || []).filter((item) => !item.occupied).slice(0, 24);
+  const [freshTravel, setFreshTravel] = useState(null);
+  const selected = travels.find((travel) => String(travel.id) === String(selectedId)) || travels[0];
+  const displayTravel = freshTravel && String(freshTravel.id) === String(selected?.id) ? freshTravel : selected;
+  const seats = displayTravel?.seats || [];
+  const availableSeatsCount = seats.filter((item) => !item.occupied).length;
+
+  useEffect(() => {
+    if (!travels.length) return;
+
+    const selectedStillExists = travels.some((travel) => String(travel.id) === String(selectedId));
+    if (!selectedStillExists) {
+      setSelectedId(travels[0].id);
+      setSeat(null);
+      setFreshTravel(null);
+    }
+  }, [travels, selectedId]);
 
   async function buy() {
     if (!selected || !seat) {
       Alert.alert('Cuchao', 'Selecciona un viaje y un asiento.');
       return;
     }
+
+    if (selected.demo) {
+      Alert.alert('Cuchao', 'No se pudo conectar con el servidor. Reinicia Laravel y recarga la app para comprar boletos reales.');
+      return;
+    }
+
     setBusy(true);
     try {
+      const latest = await api.get(`/travels/${selected.id}`);
+      const latestTravel = latest.data;
+      const latestSeat = latestTravel.seats?.find((item) => String(item.id) === String(seat.id));
+
+      setFreshTravel(latestTravel);
+
+      if (!latestSeat) {
+        setSeat(null);
+        Alert.alert('Cuchao', 'Ese asiento ya no esta disponible para este viaje.');
+        return;
+      }
+
+      if (latestSeat.occupied) {
+        setSeat(null);
+        Alert.alert('Cuchao', 'Ese asiento acaba de ocuparse. Actualice la vista y elige otro asiento libre.');
+        return;
+      }
+
       const result = await api.post('/tickets', {
         salida_id: selected.id,
-        asiento_id: seat.id,
+        asiento_id: latestSeat.id,
+        asiento_numero: latestSeat.number,
         pasajero_nombre: user?.name || 'Pasajero',
         pasajero_cedula: user?.cedula || '0000000000',
         tipo_descuento: 'ninguno',
@@ -260,6 +305,10 @@ function BuyScreen({ api, travels, user, onBought }) {
       });
       onBought(result.data);
     } catch (error) {
+      if (error.data?.travel) {
+        setFreshTravel(error.data.travel);
+        setSeat(null);
+      }
       Alert.alert('Cuchao', error.message);
     } finally {
       setBusy(false);
@@ -270,7 +319,7 @@ function BuyScreen({ api, travels, user, onBought }) {
     <ScrollView contentContainerStyle={styles.content}>
       <Text style={styles.screenTitle}>Buscar viaje</Text>
       {travels.map((travel) => (
-        <Pressable key={travel.id} onPress={() => { setSelected(travel); setSeat(null); }} style={[styles.scheduleCard, selected?.id === travel.id && styles.selectedCard]}>
+        <Pressable key={travel.id} onPress={() => { setSelectedId(travel.id); setSeat(null); setFreshTravel(null); }} style={[styles.scheduleCard, String(selected?.id) === String(travel.id) && styles.selectedCard]}>
           <View>
             <Text style={styles.scheduleTime}>{travel.time}</Text>
             <Text style={styles.muted}>{travel.origin} → {travel.destination}</Text>
@@ -280,9 +329,19 @@ function BuyScreen({ api, travels, user, onBought }) {
         </Pressable>
       ))}
       <Section title="Vista previa de asientos">
+        <Text style={styles.muted}>{availableSeatsCount} asientos disponibles. Los grises ya estan ocupados.</Text>
         <View style={styles.seatGrid}>
-          {availableSeats.map((item) => (
-            <Pressable key={item.id} onPress={() => setSeat(item)} style={[styles.seat, seat?.id === item.id && styles.seatSelected]}>
+          {seats.map((item) => (
+            <Pressable
+              key={item.id}
+              disabled={item.occupied}
+              onPress={() => setSeat(item)}
+              style={[
+                styles.seat,
+                item.occupied && styles.seatOccupied,
+                seat?.id === item.id && styles.seatSelected,
+              ]}
+            >
               <Text style={styles.seatText}>{item.number}</Text>
             </Pressable>
           ))}
@@ -408,6 +467,8 @@ function TravelRow({ travel }) {
 }
 
 function TicketCard({ ticket }) {
+  const qrEnabled = (ticket.status === 'pagado' || ticket.payment?.status === 'validado') && ticket.qr_value;
+
   return (
     <View style={styles.ticket}>
       <View style={styles.ticketTop}>
@@ -423,10 +484,17 @@ function TicketCard({ ticket }) {
         <Pair label="Asiento" value={ticket.seat} />
         <Pair label="Pasajero" value={ticket.passenger_name} />
       </View>
-      <View style={styles.qrMock}>
-        <Text style={styles.qrText}>QR</Text>
-        <Text style={styles.qrHint}>Muestra este código al abordar</Text>
-      </View>
+      {qrEnabled ? (
+        <View style={styles.qrMock}>
+          <QRCode value={ticket.qr_value} size={150} backgroundColor="#ffffff" color="#111827" />
+          <Text style={styles.qrHint}>Muestra este código al abordar</Text>
+        </View>
+      ) : (
+        <View style={styles.qrPending}>
+          <Text style={styles.pendingTitle}>QR pendiente</Text>
+          <Text style={styles.muted}>El código de abordaje se genera cuando el administrador valida tu pago.</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -525,6 +593,7 @@ const styles = StyleSheet.create({
   price: { color: '#fff', fontSize: 18, fontWeight: '900' },
   seatGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 9 },
   seat: { width: 48, height: 42, borderRadius: 10, borderWidth: 1, borderColor: '#3a4657', alignItems: 'center', justifyContent: 'center', backgroundColor: '#0c1624' },
+  seatOccupied: { backgroundColor: '#1f2937', borderColor: '#334155', opacity: 0.45 },
   seatSelected: { backgroundColor: '#ff6b00', borderColor: '#ff9a33' },
   seatText: { color: '#fff', fontWeight: '900' },
   ticket: { backgroundColor: '#081321', borderColor: '#17263a', borderWidth: 1, borderRadius: 24, padding: 18, marginBottom: 14 },
@@ -539,6 +608,8 @@ const styles = StyleSheet.create({
   qrMock: { backgroundColor: '#fff', borderRadius: 14, minHeight: 150, alignItems: 'center', justifyContent: 'center', marginTop: 4 },
   qrText: { color: '#111827', fontSize: 48, fontWeight: '900' },
   qrHint: { color: '#334155', marginTop: 8 },
+  qrPending: { backgroundColor: '#0c1624', borderColor: '#334155', borderWidth: 1, borderRadius: 14, minHeight: 120, alignItems: 'center', justifyContent: 'center', marginTop: 4, padding: 18 },
+  pendingTitle: { color: '#ff8a2a', fontSize: 18, fontWeight: '900', marginBottom: 8 },
   bottomNav: { position: 'absolute', bottom: 0, left: 0, right: 0, minHeight: 84, flexDirection: 'row', backgroundColor: '#050b14', borderTopColor: '#162234', borderTopWidth: 1, paddingTop: 8, paddingHorizontal: 4 },
   navItem: { flex: 1, alignItems: 'center' },
   navIcon: { color: '#8b96a8', fontSize: 20, fontWeight: '900' },

@@ -100,6 +100,11 @@
                                     'route' => route('salidas.index'),
                                     'active' => request()->routeIs('salidas.*'),
                                 ],
+                                [
+                                    'label' => 'Aprobar pagos',
+                                    'route' => route('pagos.index'),
+                                    'active' => request()->routeIs('pagos.*'),
+                                ],
                             ];
                         @endphp
 
