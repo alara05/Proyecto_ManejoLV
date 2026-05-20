@@ -20,9 +20,17 @@
             </div>
         @endif
 
-        <div class="client-ticket-heading">
-            <span>Pago de boleto</span>
-            <h1>Subir comprobante</h1>
+        <div class="interface-hero interface-hero-payments" style="--page-image: url('{{ asset('images/inicio/panel-control.jpg') }}')">
+            <div class="interface-hero-copy">
+                <span class="hero-kicker">Pago de boleto</span>
+                <h1>Subir comprobante</h1>
+                <p>Carga tu deposito o transferencia para que el equipo valide el pago y emita tu boleto.</p>
+            </div>
+            <div class="interface-hero-panel">
+                <span>Total</span>
+                <strong>${{ number_format($boleto->precio, 2) }}</strong>
+                <small>{{ $boleto->pago ? 'Pago ' . $boleto->pago->estado : 'pendiente de comprobante' }}</small>
+            </div>
         </div>
 
         <section class="client-ticket-panel">

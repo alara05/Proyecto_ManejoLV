@@ -23,36 +23,46 @@
                 <span class="brand-text">{{ $appConfig?->nombre_aplicacion ?? config('app.name', 'Manejo Buses') }}</span>
             </a>
 
-            <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" data-menu-toggle>
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+            <div class="nav-actions nav-actions-public">
+                @auth
+                    @php
+                        $navItems = [
+                            ['label' => 'Dashboard', 'route' => route('dashboard'), 'active' => request()->routeIs('dashboard')],
+                            ['label' => 'Buscar viajes', 'route' => route('viajes.buscar'), 'active' => request()->routeIs('viajes.buscar')],
+                            ['label' => 'Comprar boleto', 'route' => route('cliente.boletos.create'), 'active' => request()->routeIs('cliente.boletos.create', 'cliente.boletos.store')],
+                            ['label' => 'Historial', 'route' => route('cliente.boletos.historial'), 'active' => request()->routeIs('cliente.boletos.historial', 'cliente.boletos.historial.legacy')],
+                            ['label' => 'Cooperativas', 'route' => route('cooperativas.index'), 'active' => request()->routeIs('cooperativas.*')],
+                            ['label' => 'Provincias', 'route' => route('provincias.index'), 'active' => request()->routeIs('provincias.*')],
+                            ['label' => 'Ciudades', 'route' => route('ciudades.index'), 'active' => request()->routeIs('ciudades.*')],
+                            ['label' => 'Buses', 'route' => route('buses.index'), 'active' => request()->routeIs('buses.*')],
+                            ['label' => 'Tipos de asientos', 'route' => route('tipo-asientos.index'), 'active' => request()->routeIs('tipo-asientos.*')],
+                            ['label' => 'Asientos', 'route' => route('asientos.index'), 'active' => request()->routeIs('asientos.*')],
+                            ['label' => 'Rutas', 'route' => route('rutas.index'), 'active' => request()->routeIs('rutas.*')],
+                            ['label' => 'Salidas', 'route' => route('salidas.index'), 'active' => request()->routeIs('salidas.*')],
+                            ['label' => 'Ventas', 'route' => route('boletos.index'), 'active' => request()->routeIs('boletos.*')],
+                            ['label' => 'Pagos', 'route' => route('pagos.index'), 'active' => request()->routeIs('pagos.*')],
+                            ['label' => 'Accesos', 'route' => route('accesos.index'), 'active' => request()->routeIs('accesos.*')],
+                            ['label' => 'Configuracion', 'route' => route('configuracion.edit'), 'active' => request()->routeIs('configuracion.*')],
+                        ];
+                    @endphp
 
-            <div class="nav-content" data-nav-content>
-                <ul class="nav-links">
-                    <li><a href="{{ route('inicio') }}#inicio">Inicio</a></li>
-                    <li><a href="{{ route('viajes.buscar') }}">Buscar viajes</a></li>
-                    <li><a href="{{ route('cliente.boletos.create') }}">Comprar boleto</a></li>
-                    <li><a href="{{ route('inicio') }}#servicios">Servicios</a></li>
-                    <li><a href="{{ route('inicio') }}#rutas">Rutas</a></li>
-                    <li><a href="{{ route('inicio') }}#beneficios">Beneficios</a></li>
-                    <li><a href="{{ route('inicio') }}#contacto">Ayuda</a></li>
-                </ul>
-
-                <div class="nav-actions">
-                    @auth
-                        <a class="btn btn-secondary" href="{{ route('cliente.boletos.historial') }}">Historial</a>
-                        <a class="btn btn-secondary" href="{{ route('dashboard') }}">Panel</a>
-                        <form method="POST" action="{{ route('logout') }}" class="logout-form">
-                            @csrf
-                            <button class="btn btn-primary" type="submit">Salir</button>
-                        </form>
-                    @else
-                        <a class="btn btn-secondary" href="{{ route('register') }}">Registrarse</a>
-                        <a class="btn btn-primary" href="{{ route('login') }}">Iniciar sesion</a>
-                    @endauth
-                </div>
+                    <label class="sr-only" for="public-dashboard-navigation">Navegar</label>
+                    <select id="public-dashboard-navigation" class="nav-select" onchange="if (this.value) window.location.href = this.value">
+                        <option value="" selected>Navegar</option>
+                        @foreach ($navItems as $item)
+                            @unless ($item['active'])
+                                <option value="{{ $item['route'] }}">{{ $item['label'] }}</option>
+                            @endunless
+                        @endforeach
+                    </select>
+                    <form method="POST" action="{{ route('logout') }}" class="logout-form">
+                        @csrf
+                        <button class="btn btn-primary" type="submit">Salir</button>
+                    </form>
+                @else
+                    <a class="btn btn-secondary" href="{{ route('register') }}">Registrarse</a>
+                    <a class="btn btn-primary" href="{{ route('login') }}">Iniciar sesion</a>
+                @endauth
             </div>
         </nav>
     </header>

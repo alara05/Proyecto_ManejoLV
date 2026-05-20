@@ -5,9 +5,17 @@
 @section('content')
 <section class="client-ticket-page">
     <div class="client-ticket-shell">
-        <div class="client-ticket-heading">
-            <span>Compra de boletos</span>
-            <h1>Elige tu salida y asiento</h1>
+        <div class="interface-hero interface-hero-tickets" style="--page-image: url('{{ asset('images/inicio/panel-boletos.jpg') }}')">
+            <div class="interface-hero-copy">
+                <span class="hero-kicker">Compra de boletos</span>
+                <h1>Elige tu salida y asiento</h1>
+                <p>Reserva tu viaje desde una pantalla conectada con rutas, disponibilidad, descuentos y datos del pasajero.</p>
+            </div>
+            <div class="interface-hero-panel">
+                <span>Salidas</span>
+                <strong>{{ $salidas->count() }}</strong>
+                <small>opciones programadas</small>
+            </div>
         </div>
 
         @if ($errors->any())
