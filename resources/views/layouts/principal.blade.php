@@ -26,10 +26,11 @@
             <div class="nav-actions nav-actions-public">
                 @auth
                     @php
+                        $canSellTickets = in_array(auth()->user()?->role, ['admin', 'oficinista'], true);
                         $navItems = [
                             ['label' => 'Dashboard', 'route' => route('dashboard'), 'active' => request()->routeIs('dashboard')],
                             ['label' => 'Buscar viajes', 'route' => route('viajes.buscar'), 'active' => request()->routeIs('viajes.buscar')],
-                            ['label' => 'Comprar boleto', 'route' => route('cliente.boletos.create'), 'active' => request()->routeIs('cliente.boletos.create', 'cliente.boletos.store')],
+                            ['label' => 'Vender boleto', 'route' => $canSellTickets ? route('boletos.create') : route('cliente.boletos.create'), 'active' => $canSellTickets ? request()->routeIs('boletos.create', 'boletos.store') : request()->routeIs('cliente.boletos.create', 'cliente.boletos.store')],
                             ['label' => 'Historial', 'route' => route('cliente.boletos.historial'), 'active' => request()->routeIs('cliente.boletos.historial', 'cliente.boletos.historial.legacy')],
                             ['label' => 'Cooperativas', 'route' => route('cooperativas.index'), 'active' => request()->routeIs('cooperativas.*')],
                             ['label' => 'Provincias', 'route' => route('provincias.index'), 'active' => request()->routeIs('provincias.*')],
@@ -39,7 +40,6 @@
                             ['label' => 'Asientos', 'route' => route('asientos.index'), 'active' => request()->routeIs('asientos.*')],
                             ['label' => 'Rutas', 'route' => route('rutas.index'), 'active' => request()->routeIs('rutas.*')],
                             ['label' => 'Salidas', 'route' => route('salidas.index'), 'active' => request()->routeIs('salidas.*')],
-                            ['label' => 'Ventas', 'route' => route('boletos.index'), 'active' => request()->routeIs('boletos.*')],
                             ['label' => 'Pagos', 'route' => route('pagos.index'), 'active' => request()->routeIs('pagos.*')],
                             ['label' => 'Accesos', 'route' => route('accesos.index'), 'active' => request()->routeIs('accesos.*')],
                             ['label' => 'Configuracion', 'route' => route('configuracion.edit'), 'active' => request()->routeIs('configuracion.*')],

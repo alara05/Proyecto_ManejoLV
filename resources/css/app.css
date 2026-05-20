@@ -53,7 +53,34 @@
     backdrop-filter: blur(18px);
 }
 
+.admin-shell section .overflow-x-auto,
+.admin-shell .mt-3.overflow-hidden.rounded.border {
+    border-color: rgb(255 255 255 / 0.1);
+    background:
+        linear-gradient(135deg, rgb(36 168 255 / 0.06), transparent 46%),
+        rgb(2 6 23 / 0.34);
+}
+
+.admin-shell .overflow-x-auto {
+    scrollbar-color: rgb(56 189 248 / 0.55) rgb(15 23 42 / 0.86);
+}
+
+.admin-shell .overflow-x-auto::-webkit-scrollbar {
+    height: 10px;
+}
+
+.admin-shell .overflow-x-auto::-webkit-scrollbar-track {
+    background: rgb(15 23 42 / 0.86);
+}
+
+.admin-shell .overflow-x-auto::-webkit-scrollbar-thumb {
+    border: 2px solid rgb(15 23 42 / 0.86);
+    border-radius: 999px;
+    background: rgb(56 189 248 / 0.62);
+}
+
 .admin-shell table {
+    overflow: hidden;
     color: #e5edf8;
 }
 
@@ -81,12 +108,14 @@
     background: rgb(2 6 23 / 0.22);
     transition:
         background-color 0.18s ease,
+        box-shadow 0.18s ease,
         transform 0.18s ease;
 }
 
 .admin-shell tbody tr:hover,
 .admin-shell tbody tr.hover\:bg-slate-50\/70:hover {
     background: rgb(36 168 255 / 0.12);
+    box-shadow: inset 3px 0 0 rgb(56 189 248 / 0.72);
 }
 
 .admin-shell td {
@@ -111,9 +140,16 @@
     font-weight: 750;
 }
 
+.admin-shell td p,
+.admin-shell section.rounded.bg-white p {
+    color: inherit;
+}
+
 .admin-shell table a,
 .admin-shell table button,
 .admin-shell main > .mb-6 > a,
+.admin-shell section .flex.gap-2 > a,
+.admin-shell section .flex.gap-2 > button,
 .admin-shell form button[type='submit'] {
     border-color: rgb(255 255 255 / 0.12);
     border-radius: 0.65rem;
@@ -129,6 +165,8 @@
 .admin-shell table a:hover,
 .admin-shell table button:hover,
 .admin-shell main > .mb-6 > a:hover,
+.admin-shell section .flex.gap-2 > a:hover,
+.admin-shell section .flex.gap-2 > button:hover,
 .admin-shell form button[type='submit']:hover {
     transform: translateY(-1px);
     border-color: rgb(56 189 248 / 0.58);
@@ -136,6 +174,7 @@
 }
 
 .admin-shell main > .mb-6 > a,
+.admin-shell section .flex.gap-2 > button,
 .admin-shell form button[type='submit'] {
     background: #38bdf8;
     color: #020617;
@@ -172,4 +211,48 @@
 
 .admin-shell .bg-slate-100 {
     background: rgb(255 255 255 / 0.1);
+}
+
+.admin-shell .text-red-700 {
+    color: #fecaca;
+}
+
+.admin-shell .text-blue-700 {
+    color: #bfdbfe;
+}
+
+.admin-shell .border-red-200 {
+    border-color: rgb(248 113 113 / 0.34);
+}
+
+.admin-shell .border-blue-200 {
+    border-color: rgb(96 165 250 / 0.34);
+}
+
+.admin-shell table form button[type='submit'] {
+    border-color: rgb(248 113 113 / 0.34);
+    background: rgb(127 29 29 / 0.2);
+    color: #fecaca;
+}
+
+.admin-shell table form button[type='submit']:hover {
+    border-color: rgb(248 113 113 / 0.56);
+    background: rgb(127 29 29 / 0.32);
+}
+
+.admin-shell .mt-5 nav,
+.admin-shell .mt-5 > div {
+    color: rgb(226 232 240 / 0.9);
+}
+
+.admin-shell .mt-5 a,
+.admin-shell .mt-5 span {
+    border-color: rgb(255 255 255 / 0.12);
+    background: rgb(15 23 42 / 0.72);
+    color: rgb(226 232 240 / 0.9);
+}
+
+.admin-shell .mt-5 a:hover {
+    border-color: rgb(56 189 248 / 0.48);
+    background: rgb(56 189 248 / 0.14);
 }
