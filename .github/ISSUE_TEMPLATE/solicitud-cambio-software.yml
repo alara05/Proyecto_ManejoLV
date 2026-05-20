@@ -1,0 +1,207 @@
+name: Solicitud de cambio de software
+description: Formulario para registrar, evaluar y aprobar cambios en el software.
+title: "[Cambio]: "
+labels: ["solicitud-cambio", "ACS"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Formulario de Solicitud de Cambio de Software
+        Complete la información solicitada para registrar una petición de cambio.
+        Este formulario puede utilizarse para cambios correctivos, adaptativos, perfectivos, preventivos o de emergencia.
+
+  - type: input
+    id: codigo
+    attributes:
+      label: Código de solicitud
+      description: Ingrese un código interno para identificar el cambio.
+      placeholder: "Ej: CR-2026-001"
+    validations:
+      required: true
+
+  - type: input
+    id: fecha_solicitud
+    attributes:
+      label: Fecha de solicitud
+      description: Indique la fecha en que se registra la solicitud.
+      placeholder: "Ej: 15/05/2026"
+    validations:
+      required: true
+
+  - type: input
+    id: solicitante
+    attributes:
+      label: Nombre del solicitante
+      description: Persona que solicita el cambio.
+      placeholder: "Ej: Juan Pérez"
+    validations:
+      required: true
+
+  - type: input
+    id: area
+    attributes:
+      label: Área o departamento
+      description: Área desde donde se solicita el cambio.
+      placeholder: "Ej: Administración, Soporte, Sistemas"
+    validations:
+      required: true
+
+  - type: input
+    id: contacto
+    attributes:
+      label: Correo o contacto
+      description: Información de contacto del solicitante.
+      placeholder: "Ej: usuario@empresa.com"
+    validations:
+      required: true
+
+  - type: input
+    id: sistema
+    attributes:
+      label: Sistema afectado
+      description: Nombre del sistema donde se aplicará el cambio.
+      placeholder: "Ej: Sistema de Gestión Empresarial"
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Versión actual
+      description: Versión del software donde se requiere el cambio.
+      placeholder: "Ej: v1.0.0"
+    validations:
+      required: false
+
+  - type: input
+    id: modulo
+    attributes:
+      label: Módulo afectado
+      description: Parte específica del sistema relacionada con el cambio.
+      placeholder: "Ej: Login, Reportes, Usuarios, Ventas"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: tipo_cambio
+    attributes:
+      label: Tipo de cambio
+      description: Seleccione el tipo de petición.
+      options:
+        - Correctivo - Corrección de error o bug
+        - Adaptativo - Ajuste a nuevo entorno o tecnología
+        - Perfectivo - Mejora o nueva funcionalidad
+        - Preventivo - Prevención de problemas futuros
+        - Emergencia - Cambio urgente
+    validations:
+      required: true
+
+  - type: dropdown
+    id: prioridad
+    attributes:
+      label: Prioridad
+      description: Nivel de importancia del cambio.
+      options:
+        - Baja
+        - Media
+        - Alta
+        - Urgente
+        - Crítica
+    validations:
+      required: true
+
+  - type: textarea
+    id: descripcion
+    attributes:
+      label: Descripción del cambio
+      description: Explique claramente qué se desea modificar.
+      placeholder: "Describa el cambio solicitado..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: justificacion
+    attributes:
+      label: Justificación del cambio
+      description: Explique por qué es necesario realizar este cambio.
+      placeholder: "Indique el motivo o necesidad..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: impacto_negocio
+    attributes:
+      label: Impacto en el negocio
+      description: Indique cómo afecta o beneficia este cambio a la empresa o usuarios.
+      placeholder: "Ej: mejora reportes, reduce errores, agiliza procesos..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: impacto_tecnico
+    attributes:
+      label: Impacto técnico
+      description: Indique posibles cambios en código, base de datos, interfaz, API, servidor o documentación.
+      placeholder: "Ej: modificar tabla usuarios, actualizar endpoint, cambiar vista..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: riesgos
+    attributes:
+      label: Riesgos identificados
+      description: Indique posibles fallos o problemas derivados del cambio.
+      placeholder: "Ej: errores en reportes, incompatibilidad, caída temporal del servicio..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: plan_pruebas
+    attributes:
+      label: Plan de pruebas
+      description: Describa cómo se validará que el cambio funciona correctamente.
+      placeholder: "Ej: pruebas unitarias, pruebas funcionales, validación con usuario..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: plan_reversa
+    attributes:
+      label: Plan de reversa
+      description: Explique cómo se volverá a la versión anterior si el cambio falla.
+      placeholder: "Ej: restaurar backup, revertir commit, volver a versión anterior..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidencias
+    attributes:
+      label: Evidencias o adjuntos
+      description: Agregue capturas, logs, enlaces, maquetas o información adicional.
+      placeholder: "Pegue enlaces o describa los archivos adjuntos..."
+    validations:
+      required: false
+
+  - type: dropdown
+    id: decision
+    attributes:
+      label: Decisión inicial
+      description: Estado inicial de la solicitud.
+      options:
+        - Pendiente de revisión
+        - Aprobado
+        - Rechazado
+        - Requiere más información
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmacion
+    attributes:
+      label: Confirmación
+      description: Confirme que la información ingresada es correcta.
+      options:
+        - label: Confirmo que la solicitud contiene información suficiente para ser revisada.
+          required: true

@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "Cuchao",
+    "slug": "cuchao-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logo-header.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/logo-header.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#020713"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logo-header.png",
+        "backgroundColor": "#020713"
+      },
+      "package": "com.cuchao.mobile"
+    }
+  }
+}
