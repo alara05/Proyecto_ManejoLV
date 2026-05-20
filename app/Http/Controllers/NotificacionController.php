@@ -34,11 +34,8 @@ class NotificacionController extends Controller
 
     public function exportarPdf(Request $request, NotificacionPdfGenerator $generator): Response
     {
-        $query = $request->user()->role === 'admin'
-            ? $request->user()->notifications()->getModel()->newQuery()
-            : $request->user()->notifications();
-
-        $notificaciones = $query
+        $notificaciones = $request->user()
+            ->notifications()
             ->latest()
             ->limit(18)
             ->get();

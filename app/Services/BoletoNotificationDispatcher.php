@@ -23,6 +23,7 @@ class BoletoNotificationDispatcher
         $pago->loadMissing('boleto');
 
         $this->notify($pago->boleto, new PagoPendienteNotification($pago));
+        $this->notifyAdmin(new PagoPendienteNotification($pago));
     }
 
     public function pagoValidado(Pago $pago): void
@@ -50,6 +51,15 @@ class BoletoNotificationDispatcher
 
         if ($clienteEmail && $clienteEmail !== $userEmail) {
             Notification::route('mail', $clienteEmail)->notify($notification);
+        }
+    }
+
+    private function notifyAdmin(BaseNotification $notification): void
+    {
+        $adminEmail = config('app.admin_email');
+
+        if ($adminEmail) {
+            Notification::route('mail', $adminEmail)->notify($notification);
         }
     }
 }

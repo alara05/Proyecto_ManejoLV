@@ -24,10 +24,12 @@ class NotificacionPdfGenerator
         foreach ($notificaciones->take(18) as $notificacion) {
             $data = $notificacion->data ?? [];
             $estado = $notificacion->read_at ? 'Leida' : 'Pendiente';
+            $titulo = $data['codigo'] ?? class_basename($notificacion->type);
+            $mensaje = $data['mensaje'] ?? 'Sin detalle.';
 
             $commands[] = '0 g';
-            $commands[] = $this->text(($data['titulo'] ?? 'Notificacion') . ' - ' . $estado, 48, $y, 12, true);
-            $commands[] = $this->text($this->limit($data['mensaje'] ?? 'Sin detalle.', 88), 48, $y - 18, 10);
+            $commands[] = $this->text($titulo . ' - ' . $estado, 48, $y, 12, true);
+            $commands[] = $this->text($this->limit($mensaje, 88), 48, $y - 18, 10);
             $commands[] = $this->text('Fecha: ' . $notificacion->created_at->format('d/m/Y H:i'), 48, $y - 34, 9);
             $commands[] = '0.85 0.87 0.91 RG 48 ' . ($y - 48) . ' 499 1 re S';
 

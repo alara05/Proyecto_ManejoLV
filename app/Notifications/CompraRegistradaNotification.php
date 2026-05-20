@@ -35,6 +35,7 @@ class CompraRegistradaNotification extends Notification
             'codigo' => $this->boleto->codigo,
             'estado' => $this->boleto->estado,
             'mensaje' => 'Compra registrada correctamente.',
+            'url' => route('cliente.boletos.show', $this->boleto),
         ];
     }
 }

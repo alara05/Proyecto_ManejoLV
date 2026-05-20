@@ -10,10 +10,10 @@ class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
-        $email = env('ADMIN_EMAIL');
+        $email = env('ADMIN_EMAIL', 'samibox05@gmail.com');
         $password = env('ADMIN_PASSWORD');
 
-        if (! $email || ! $password) {
+        if (! $password) {
             return;
         }
 
