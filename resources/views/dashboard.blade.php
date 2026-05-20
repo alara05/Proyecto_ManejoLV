@@ -1,30 +1,53 @@
 @extends('layouts.app')
 
 @section('content')
-    @php
-        $user = auth()->user();
-        $role = $user->role;
-    @endphp
-
-    <section class="overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(135deg,rgba(236,117,25,0.82),rgba(20,126,220,0.48),rgba(8,12,19,0.72))] p-6 text-white shadow-2xl shadow-black/30 md:p-8">
-        <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end">
-            <div>
-                <p class="inline-flex rounded-full border border-white/25 bg-black/20 px-3 py-2 text-xs font-black uppercase tracking-[0.16em] text-white">Sesion iniciada</p>
-                <h1 class="mt-5 max-w-3xl text-4xl font-black uppercase leading-none tracking-wide md:text-6xl">
-                    Bienvenido, {{ $user->name }}
-                </h1>
-                <p class="mt-5 max-w-2xl text-base font-semibold leading-7 text-white/80">
-                    Usa la barra superior para navegar por viajes, compras, administracion, ventas, pagos y control.
-                </p>
-            </div>
-
-            <div class="rounded-2xl border border-white/20 bg-slate-950/55 p-6 shadow-xl shadow-black/25 backdrop-blur">
-                <p class="text-xs font-black uppercase tracking-[0.14em] text-white/70">Rol actual</p>
-                <strong class="mt-3 block text-3xl font-black capitalize text-white">{{ str_replace('_', ' ', $role) }}</strong>
-                <p class="mt-3 text-sm font-semibold leading-6 text-white/70">
-                    Los accesos principales estan disponibles en la navbar del dashboard.
-                </p>
-            </div>
+    <section class="rounded bg-white p-6 shadow-sm">
+        <p class="text-sm font-medium text-slate-500">Sesion iniciada</p>
+        <h1 class="mt-2 text-2xl font-semibold">Bienvenido, {{ auth()->user()->name }}</h1>
+        <p class="mt-2 text-slate-600">Rol actual: {{ auth()->user()->role }}</p>
+        <div class="mt-5 flex flex-wrap gap-3">
+            <a href="{{ route('cooperativas.index') }}" class="inline-flex rounded bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700">
+                Gestionar cooperativas
+            </a>
+            <a href="{{ route('provincias.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Gestionar provincias
+            </a>
+            <a href="{{ route('ciudades.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Gestionar ciudades
+            </a>
+            <a href="{{ route('buses.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Gestionar buses
+            </a>
+            <a href="{{ route('tipo-asientos.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Gestionar tipos de asientos
+            </a>
+            <a href="{{ route('asientos.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Gestionar asientos
+            </a>
+            <a href="{{ route('rutas.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Gestionar rutas
+            </a>
+            <a href="{{ route('salidas.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Gestionar salidas
+            </a>
+            @if (in_array(auth()->user()->role, ['admin', 'oficinista'], true))
+                <a href="{{ route('boletos.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                    Vender boletos
+                </a>
+                <a href="{{ route('pagos.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                    Validar pagos
+                </a>
+            @endif
+            @if (in_array(auth()->user()->role, ['admin', 'personal_bus'], true))
+                <a href="{{ route('accesos.index') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                    Registrar accesos
+                </a>
+            @endif
+            @if (auth()->user()->role === 'admin')
+                <a href="{{ route('configuracion.edit') }}" class="inline-flex rounded border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                    Configurar aplicacion
+                </a>
+            @endif
         </div>
     </section>
 @endsection

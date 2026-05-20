@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Boleto;
 use App\Models\Pago;
-use App\Services\BoletoNotificationDispatcher;
+use App\Models\User;
+use App\Notifications\ComprobantePagoCargadoNotification;
+use App\Notifications\PagoRechazadoNotification;
+use App\Notifications\PagoValidadoNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\View\View;
 
 class PagoController extends Controller
@@ -74,7 +78,16 @@ class PagoController extends Controller
             ]
         );
 
-        app(BoletoNotificationDispatcher::class)->pagoPendiente($pago);
+        $pago->load('boleto');
+
+        $validadores = User::whereIn('role', ['admin', 'oficinista'])->where('activo', true)->get();
+
+        Notification::send($validadores, new ComprobantePagoCargadoNotification($pago));
+
+        if (config('app.admin_email') && ! $validadores->contains('email', config('app.admin_email'))) {
+            Notification::route('mail', config('app.admin_email'))
+                ->notify(new ComprobantePagoCargadoNotification($pago));
+        }
 
         return redirect()
             ->route('cliente.pagos.create', $boleto)
@@ -119,8 +132,7 @@ class PagoController extends Controller
             'vendido_at' => now(),
         ]);
 
-        app(BoletoNotificationDispatcher::class)->pagoValidado($pago);
-        app(BoletoNotificationDispatcher::class)->boletoEmitido($pago->boleto);
+        $pago->boleto->cliente?->notify(new PagoValidadoNotification($pago));
 
         return redirect()
             ->route('pagos.show', $pago)
@@ -154,6 +166,8 @@ class PagoController extends Controller
             'estado' => 'reservado',
             'vendido_at' => null,
         ]);
+
+        $pago->boleto->cliente?->notify(new PagoRechazadoNotification($pago));
 
         return redirect()
             ->route('pagos.show', $pago)

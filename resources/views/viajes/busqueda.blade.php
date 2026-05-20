@@ -5,17 +5,9 @@
 @section('content')
 <section class="travel-search-page">
     <div class="travel-search-shell">
-        <div class="interface-hero interface-hero-routes" style="--page-image: url('{{ asset('images/inicio/panel-rutas.jpg') }}')">
-            <div class="interface-hero-copy">
-                <span class="hero-kicker">Viajes disponibles</span>
-                <h1>Buscar destinos y frecuencias</h1>
-                <p>Explora rutas activas, cooperativas, tipos de asiento y buses con la misma experiencia visual del inicio.</p>
-            </div>
-            <div class="interface-hero-panel">
-                <span>Resultados</span>
-                <strong>{{ $viajes->total() }}</strong>
-                <small>frecuencia{{ $viajes->total() === 1 ? '' : 's' }} encontrada{{ $viajes->total() === 1 ? '' : 's' }}</small>
-            </div>
+        <div class="travel-search-heading">
+            <span>Viajes disponibles</span>
+            <h1>Buscar destinos y frecuencias</h1>
         </div>
 
         <form method="GET" action="{{ route('viajes.buscar') }}" class="travel-filter-panel">
