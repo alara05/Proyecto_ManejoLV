@@ -1,6 +1,6 @@
 @extends('layouts.principal')
 
-@section('title', 'Buscar viajes | ' . config('app.name', 'Manejo Buses'))
+@section('title', 'Buscar viajes | Cuchao')
 
 @section('content')
 <section class="travel-search-page">

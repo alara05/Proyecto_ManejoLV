@@ -1,6 +1,6 @@
 @extends('layouts.principal')
 
-@section('title', 'Crear cuenta | ' . config('app.name', 'Manejo Buses'))
+@section('title', 'Crear cuenta | Cuchao')
 
 @section('content')
     <section class="auth-page auth-page-register">

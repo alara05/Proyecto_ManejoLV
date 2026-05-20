@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $appConfig?->nombre_aplicacion ?? config('app.name', 'Manejo Buses') }}</title>
+    <title>Cuchao</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -23,19 +23,12 @@
                     title="Ir al dashboard"
                     aria-label="Ir al dashboard"
                 >
-                    @if ($appConfig?->logo_path)
-                        <img
-                            src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($appConfig->logo_path) }}"
-                            alt="Logo"
-                            class="h-11 w-11 rounded-xl bg-white object-cover"
-                        >
-                    @else
-                        <span class="grid h-11 w-11 place-items-center rounded-xl border border-white/30 bg-white text-xs font-black text-slate-950 shadow-lg shadow-sky-500/20">
-                            MB
-                        </span>
-                    @endif
+                    <img
+                        src="{{ asset('images/dashboard/logo-header.png') }}"
+                        alt="Cuchao"
+                        class="h-12 w-44 rounded-lg object-contain"
+                    >
 
-                    <span>{{ $appConfig?->nombre_aplicacion ?? 'Manejo Buses' }}</span>
                 </a>
 
                 <div class="flex flex-wrap items-center gap-3 text-sm font-bold">
@@ -106,21 +99,6 @@
                                     'label' => 'Salidas',
                                     'route' => route('salidas.index'),
                                     'active' => request()->routeIs('salidas.*'),
-                                ],
-                                [
-                                    'label' => 'Pagos',
-                                    'route' => route('pagos.index'),
-                                    'active' => request()->routeIs('pagos.*'),
-                                ],
-                                [
-                                    'label' => 'Accesos',
-                                    'route' => route('accesos.index'),
-                                    'active' => request()->routeIs('accesos.*'),
-                                ],
-                                [
-                                    'label' => 'Configuración',
-                                    'route' => route('configuracion.edit'),
-                                    'active' => request()->routeIs('configuracion.*'),
                                 ],
                             ];
                         @endphp

@@ -1,6 +1,6 @@
 @extends('layouts.principal')
 
-@section('title', 'Subir comprobante | ' . config('app.name', 'Manejo Buses'))
+@section('title', 'Subir comprobante | Cuchao')
 
 @section('content')
 <section class="client-ticket-page">
