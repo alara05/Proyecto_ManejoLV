@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', $appConfig?->nombre_aplicacion ?? config('app.name', 'Manejo Buses'))</title>
+    <title>@yield('title', 'Cuchao')</title>
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800,900" rel="stylesheet">
@@ -26,19 +26,12 @@
                 aria-label="{{ auth()->check() ? 'Ir al dashboard' : 'Ir al inicio' }}"
                 title="{{ auth()->check() ? 'Ir al dashboard' : 'Ir al inicio' }}"
             >
-                @if ($appConfig?->logo_path)
-                    <img
-                        src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($appConfig->logo_path) }}"
-                        alt="Logo"
-                        class="brand-logo"
-                    >
-                @else
-                    <span class="brand-icon">MB</span>
-                @endif
+                <img
+                    src="{{ asset('images/dashboard/logo-header.png') }}"
+                    alt="Cuchao"
+                    class="brand-logo"
+                >
 
-                <span class="brand-text">
-                    {{ $appConfig?->nombre_aplicacion ?? config('app.name', 'Manejo Buses') }}
-                </span>
             </a>
 
             <div class="nav-actions nav-actions-public">
@@ -104,21 +97,6 @@
                                 'route' => route('salidas.index'),
                                 'active' => request()->routeIs('salidas.*'),
                             ],
-                            [
-                                'label' => 'Pagos',
-                                'route' => route('pagos.index'),
-                                'active' => request()->routeIs('pagos.*'),
-                            ],
-                            [
-                                'label' => 'Accesos',
-                                'route' => route('accesos.index'),
-                                'active' => request()->routeIs('accesos.*'),
-                            ],
-                            [
-                                'label' => 'Configuración',
-                                'route' => route('configuracion.edit'),
-                                'active' => request()->routeIs('configuracion.*'),
-                            ],
                         ];
                     @endphp
 
@@ -167,7 +145,7 @@
     <footer class="main-footer" id="contacto">
         <p>
             &copy; {{ date('Y') }}
-            {{ $appConfig?->nombre_aplicacion ?? config('app.name', 'Manejo Buses') }}.
+            Cuchao.
             Plataforma de gestion de pasajes.
         </p>
 

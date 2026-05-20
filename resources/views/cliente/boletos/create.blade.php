@@ -1,7 +1,7 @@
 {{-- FIX_MODAL_PAGO_COMPRAR_BOLETO_ACTIVO --}}
 @extends('layouts.principal')
 
-@section('title', 'Vender boleto | ' . config('app.name', 'Manejo Buses'))
+@section('title', 'Vender boleto | Cuchao')
 
 @push('styles')
     <style>

@@ -1,6 +1,6 @@
 @extends('layouts.principal')
 
-@section('title', 'Boleto reservado | ' . config('app.name', 'Manejo Buses'))
+@section('title', 'Boleto reservado | Cuchao')
 
 @section('content')
 <section class="client-ticket-page">

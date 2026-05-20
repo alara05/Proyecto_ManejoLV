@@ -1,6 +1,6 @@
 @extends('layouts.principal')
 
-@section('title', 'Inicio | ' . config('app.name', 'Manejo Buses'))
+@section('title', 'Inicio | Cuchao')
 
 @section('content')
 <section class="hero" id="inicio">

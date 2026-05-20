@@ -82,11 +82,11 @@ a {
 }
 
 .brand-logo {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    object-fit: cover;
-    background: #ffffff;
+    width: 164px;
+    height: 48px;
+    border-radius: 8px;
+    object-fit: contain;
+    background: transparent;
 }
 
 .brand-text {
