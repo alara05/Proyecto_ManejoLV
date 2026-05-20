@@ -13,6 +13,11 @@
 /.zed
 /auth.json
 /node_modules
+/mobile/node_modules
+/mobile/.expo
+/mobile/.expo-shared
+/mobile/dist
+/mobile/web-build
 /public/build
 /public/hot
 /public/storage

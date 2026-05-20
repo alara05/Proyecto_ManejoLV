@@ -29,6 +29,7 @@ class User extends Authenticatable
         'cooperativa_id',
         'telefono',
         'activo',
+        'api_token_hash',
     ];
 
     /**
@@ -39,6 +40,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'api_token_hash',
     ];
 
     /**
